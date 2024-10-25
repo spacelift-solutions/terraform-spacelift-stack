@@ -1,13 +1,28 @@
-name: Generate terraform docs
+name: QA
 on:
   - pull_request
+permissions:
+  contents: write
 jobs:
-  docs:
+  fmt-and-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: OpenTofu - Setup Tofu
+        uses: opentofu/setup-opentofu@v1.0.4
+
+      - name: OpenTofu - Ensure fmt has ran
+        run: tofu fmt --recursive
+
+      - name: Run TFSort
+        run: |
+          sorted_files=("variables.tf" "outputs.tf")
+          for file in "${sorted_files[@]}"; do
+              ./.github/binaries/tfsort $file
+          done
 
       - name: Render terraform docs inside the README.md and push changes back to PR branch
         uses: terraform-docs/gh-actions@v1.3.0
