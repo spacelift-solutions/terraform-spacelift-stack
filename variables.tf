@@ -157,7 +157,7 @@ variable "tf_version" {
   default     = "1.7.1"
 }
 
-variable "tofu_workspace" {
+variable "tf_workspace" {
   type        = string
   description = "The workspace to use for the stack."
   default     = null
@@ -171,6 +171,11 @@ variable "worker_pool_id" {
 
 variable "workflow_tool" {
   type        = string
-  description = "The terraform workflow tool to use"
+  description = "The workflow tool to use"
   default     = "OPEN_TOFU"
+
+  validation {
+    condition     = var.workflow_tool == "TERRAFORM_FOSS" || var.workflow_tool == "OPEN_TOFU" || var.workflow_tool == "CLOUDFORMATION" || var.workflow_tool == "TERRAGRUNT"
+    error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, or TERRAGRUNT."
+  }
 }
