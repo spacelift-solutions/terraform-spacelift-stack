@@ -11,12 +11,39 @@ Please open a PR or an issue if you see missing functionality.
 module "ec2_worker_pool_stack" {
   source = "../../"
 
-  name            = "worker-pool-stack"
-  description     = "Stack to create a worker pool"
-  repository_name = "spacelift"
-  project_root    = "aws/ecs-worker-pool"
+  name              = "worker-pool-stack"
+  description       = "Stack to create a worker pool"
+  repository_name   = "spacelift"
+  repository_branch = "main"
+  project_root      = "aws/ecs-worker-pool"
+  labels            = ["worker-pool", "example"]
+  manage_state      = true
 
-  auto_deploy = true
+  auto_deploy     = true
+  administrative  = true
+  allow_promotion = true
+  tf_version      = "1.7.1"
+  tf_workspace    = "worker-pool"
+  workflow_tool   = "OPEN_TOFU"
+
+  bitbucket_cloud_namespace = "spacelift"
+  cloud_integration         = "GITHUB"
+  runner_image              = "public.ecr.aws/spacelift/runner-terraform"
+
+  cloudformation = {
+    stack_name          = "worker-pool"
+    entry_template_file = "cloudformation/worker-pool.yml"
+    region              = "us-west-2"
+    template_bucket     = "my-template-bucket"
+  }
+
+  terragrunt_config = {
+    terragrunt_version   = "0.66.3"
+    terraform_version    = "1.8.1"
+    use_run_all          = true
+    use_smart_sanitation = true
+    tool                 = "OPEN_TOFU"
+  }
 
   additional_project_globs = [
     "modules/spacelift/worker-pool/**/*"
@@ -32,7 +59,15 @@ module "ec2_worker_pool_stack" {
     }
   }
 
-  space_id = spacelift_space.aws.id
+  policies = {
+    MY_AWESOME_PUSH_POLICY = {
+      file_path = "./policies/push/awesome.rego"
+      type      = "GIT_PUSH"
+    }
+  }
+
+  worker_pool_id = spacelift_worker_pool.this.id
+  space_id       = spacelift_space.aws.id
   aws_integration = {
     enabled = true
     id      = spacelift_aws_integration.work.id
@@ -65,9 +100,9 @@ module "ec2_worker_pool_stack" {
 | <a name="input_space_id"></a> [space\_id](#input\_space\_id) | REQUIRED The ID of the space this stack will be in. | `string` | n/a | yes |
 | <a name="input_terragrunt_config"></a> [terragrunt\_config](#input\_terragrunt\_config) | config for terragrunt in spacelift | <pre>object({<br/>    terraform_version    = string<br/>    terragrunt_version   = string<br/>    use_run_all          = optional(bool)<br/>    use_smart_sanitation = optional(bool)<br/>    tool                 = string<br/>  })</pre> | <pre>{<br/>  "terraform_version": null,<br/>  "terragrunt_version": null,<br/>  "tool": null<br/>}</pre> | no |
 | <a name="input_tf_version"></a> [tf\_version](#input\_tf\_version) | The version of OpenTofu/Terraform for your stack to use. Defaults to latest. | `string` | `"1.7.1"` | no |
-| <a name="input_tofu_workspace"></a> [tofu\_workspace](#input\_tofu\_workspace) | The workspace to use for the stack. | `string` | `null` | no |
+| <a name="input_tf_workspace"></a> [tf\_workspace](#input\_tf\_workspace) | The workspace to use for the stack. | `string` | `null` | no |
 | <a name="input_worker_pool_id"></a> [worker\_pool\_id](#input\_worker\_pool\_id) | The ID of the worker pool to use for Spacelift stack runs. Defaults to public worker pool. | `string` | `null` | no |
-| <a name="input_workflow_tool"></a> [workflow\_tool](#input\_workflow\_tool) | The terraform workflow tool to use | `string` | `"OPEN_TOFU"` | no |
+| <a name="input_workflow_tool"></a> [workflow\_tool](#input\_workflow\_tool) | The workflow tool to use | `string` | `"OPEN_TOFU"` | no |
 
 ## Outputs
 
