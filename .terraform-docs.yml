@@ -1,0 +1,50 @@
+formatter: "markdown" # this is required
+
+version: ""
+
+header-from: main.tf
+footer-from: ""
+
+content: |-
+  # Spacelift Stack Module
+  
+  This is a Terraform module that creates a Spacelift stack.
+  Not everything is implemented yet, but we are actively building this project out.
+  Please open a PR or an issue if you see missing functionality.
+
+  ## Example
+
+  ```hcl
+  {{ include "examples/full/main.tf" }}
+  ```
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}  
+
+output:
+  file: "README.md"
+  mode: create
+
+output-values:
+  enabled: false
+  from: ""
+
+sort:
+  enabled: true
+  by: name
+
+#settings:
+#  anchor: true
+#  color: true
+#  default: true
+#  description: false
+#  escape: true
+#  hide-empty: false
+#  html: true
+#  indent: 2
+#  lockfile: true
+#  read-comments: true
+#  required: true
+#  sensitive: true
+#  type: true
