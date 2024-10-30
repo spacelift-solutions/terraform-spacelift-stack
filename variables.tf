@@ -45,17 +45,6 @@ variable "bitbucket_cloud_namespace" {
   default     = null
 }
 
-variable "cloud_integration" {
-  type        = string
-  description = "The cloud integration to use for the stack. BITBUCKET or GITHUB."
-  default     = "GITHUB"
-
-  validation {
-    condition     = var.cloud_integration == "BITBUCKET" || var.cloud_integration == "GITHUB"
-    error_message = "The cloud integration must be either BITBUCKET or GITHUB."
-  }
-}
-
 variable "cloudformation" {
   type = object({
     stack_name          = string
@@ -172,6 +161,17 @@ variable "tf_workspace" {
   type        = string
   description = "The workspace to use for the stack."
   default     = null
+}
+
+variable "vcs_integration" {
+  type        = string
+  description = "The cloud integration to use for the stack. BITBUCKET or GITHUB."
+  default     = "GITHUB"
+
+  validation {
+    condition     = var.vcs_integration == "BITBUCKET" || var.vcs_integration == "GITHUB"
+    error_message = "The cloud integration must be either BITBUCKET or GITHUB."
+  }
 }
 
 variable "worker_pool_id" {

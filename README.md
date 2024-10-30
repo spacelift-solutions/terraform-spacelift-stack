@@ -85,7 +85,6 @@ module "ec2_worker_pool_stack" {
 | <a name="input_auto_deploy"></a> [auto\_deploy](#input\_auto\_deploy) | Whether to auto deploy the stack. | `bool` | `false` | no |
 | <a name="input_aws_integration"></a> [aws\_integration](#input\_aws\_integration) | Spacelift AWS integration configuration | <pre>object({<br/>    enabled = bool<br/>    id      = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_bitbucket_cloud_namespace"></a> [bitbucket\_cloud\_namespace](#input\_bitbucket\_cloud\_namespace) | The namespace of the Bitbucket Cloud account to use for the stack. Required if cloud\_integration is BITBUCKET. | `string` | `null` | no |
-| <a name="input_cloud_integration"></a> [cloud\_integration](#input\_cloud\_integration) | The cloud integration to use for the stack. BITBUCKET or GITHUB. | `string` | `"GITHUB"` | no |
 | <a name="input_cloudformation"></a> [cloudformation](#input\_cloudformation) | Cloudformation integration configuration | <pre>object({<br/>    stack_name          = string<br/>    entry_template_file = string<br/>    region              = string<br/>    template_bucket     = string<br/>  })</pre> | `null` | no |
 | <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    dependent_stack_id = string<br/>    input_name         = optional(string)<br/>    output_name        = optional(string)<br/>    trigger_always     = optional(bool)<br/>  }))</pre> | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | REQUIRED A description to describe your Spacelift stack. | `string` | n/a | yes |
@@ -102,6 +101,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_terragrunt_config"></a> [terragrunt\_config](#input\_terragrunt\_config) | config for terragrunt in spacelift | <pre>object({<br/>    terraform_version    = string<br/>    terragrunt_version   = string<br/>    use_run_all          = optional(bool)<br/>    use_smart_sanitation = optional(bool)<br/>    tool                 = string<br/>  })</pre> | <pre>{<br/>  "terraform_version": null,<br/>  "terragrunt_version": null,<br/>  "tool": null<br/>}</pre> | no |
 | <a name="input_tf_version"></a> [tf\_version](#input\_tf\_version) | The version of OpenTofu/Terraform for your stack to use. Defaults to latest. | `string` | `"1.7.1"` | no |
 | <a name="input_tf_workspace"></a> [tf\_workspace](#input\_tf\_workspace) | The workspace to use for the stack. | `string` | `null` | no |
+| <a name="input_vcs_integration"></a> [vcs\_integration](#input\_vcs\_integration) | The cloud integration to use for the stack. BITBUCKET or GITHUB. | `string` | `"GITHUB"` | no |
 | <a name="input_worker_pool_id"></a> [worker\_pool\_id](#input\_worker\_pool\_id) | The ID of the worker pool to use for Spacelift stack runs. Defaults to public worker pool. | `string` | `null` | no |
 | <a name="input_workflow_tool"></a> [workflow\_tool](#input\_workflow\_tool) | The workflow tool to use | `string` | `"OPEN_TOFU"` | no |
 
