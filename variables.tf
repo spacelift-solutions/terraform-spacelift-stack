@@ -45,13 +45,13 @@ variable "bitbucket_cloud_namespace" {
   default     = null
 }
 
-variable "cloud_integration" {
+variable "vcs_integration" {
   type        = string
   description = "The cloud integration to use for the stack. BITBUCKET or GITHUB."
   default     = "GITHUB"
 
   validation {
-    condition     = var.cloud_integration == "BITBUCKET" || var.cloud_integration == "GITHUB"
+    condition     = var.vcs_integration == "BITBUCKET" || var.vcs_integration == "GITHUB"
     error_message = "The cloud integration must be either BITBUCKET or GITHUB."
   }
 }

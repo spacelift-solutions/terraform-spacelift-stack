@@ -44,7 +44,7 @@ resource "spacelift_stack" "this" {
   }
 
   dynamic "bitbucket_cloud" {
-    for_each = var.cloud_integration == "BITBUCKET" ? ["BITBUCKET"] : []
+    for_each = var.vcs_integration == "BITBUCKET" ? ["BITBUCKET"] : []
 
     content {
       namespace = var.bitbucket_cloud_namespace
