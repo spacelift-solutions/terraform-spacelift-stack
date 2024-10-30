@@ -2,6 +2,11 @@ locals {
   is_tf_tool        = var.workflow_tool == "OPEN_TOFU" || var.workflow_tool == "TERRAFORM_FOSS"
   is_terragrunt     = var.workflow_tool == "TERRAGRUNT"
   is_cloudformation = var.workflow_tool == "CLOUDFORMATION"
+
+
+  stack_dependencies_with_inputs_and_outputs = {
+    for key, value in var.dependencies : key => value if value.input_name != null && value.output_name != null
+  }
 }
 
 resource "spacelift_stack" "this" {
@@ -92,4 +97,20 @@ resource "spacelift_policy_attachment" "this" {
 
   policy_id = spacelift_policy.this[each.key].id
   stack_id  = spacelift_stack.this.id
+}
+
+resource "spacelift_stack_dependency" "this" {
+  for_each = var.dependencies
+
+  stack_id            = spacelift_stack.this.id
+  depends_on_stack_id = each.value.dependent_stack_id
+}
+
+resource "spacelift_stack_dependency_reference" "this" {
+  for_each = local.stack_dependencies_with_inputs_and_outputs
+
+  stack_dependency_id = spacelift_stack_dependency.this[each.key].id
+  input_name          = each.value.input_name
+  output_name         = each.value.output_name
+  trigger_always      = each.value.trigger_always
 }

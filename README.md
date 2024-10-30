@@ -1,10 +1,10 @@
-<!-- BEGIN_TF_DOCS -->
 # Spacelift Stack Module
 
 This is a Terraform module that creates a Spacelift stack.
 Not everything is implemented yet, but we are actively building this project out.
 Please open a PR or an issue if you see missing functionality.
 
+<!-- BEGIN_TF_DOCS -->
 ## Example
 
 ```hcl
@@ -110,3 +110,40 @@ module "ec2_worker_pool_stack" {
 |------|-------------|
 | <a name="output_id"></a> [id](#output\_id) | The ID of the stack |  
 <!-- END_TF_DOCS -->
+
+## Using Stack Dependencies
+
+You can define a stack dependency for a stacks children, it is assumed that if you want a stack to depend on something you will add the dependency to its parent.
+
+The following example will use `stack_1`'s output `my_awesome_output` as an input to `stack_2`'s input `my_awesome_variable`.
+You can also optionally set `trigger_always` in the object to always trigger the dependent stack even if the output does not change.
+```hcl
+module "stack_1" {
+
+  dependencies = {
+    STACK_2 = {
+      dependent_stack_id = module.stack_2.id
+      output_name = "my_awesome_output"
+      input_name = "TF_VAR_my_awesome_variable"
+    }
+  }
+  
+}
+
+module "stack_2" {}
+```
+
+The following example will trigger `stack_2` whenever `stack_1` is completed but will not pass any inputs and outputs.
+```hcl
+module "stack_1" {
+
+  dependencies = {
+    STACK_2 = {
+      dependent_stack_id = module.stack_2.id
+    }
+  }
+  
+}
+
+module "stack_2" {}
+```

@@ -6,12 +6,6 @@ header-from: main.tf
 footer-from: ""
 
 content: |-
-  # Spacelift Stack Module
-  
-  This is a Terraform module that creates a Spacelift stack.
-  Not everything is implemented yet, but we are actively building this project out.
-  Please open a PR or an issue if you see missing functionality.
-
   ## Example
 
   ```hcl

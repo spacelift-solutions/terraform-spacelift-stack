@@ -67,6 +67,17 @@ variable "cloudformation" {
   default     = null
 }
 
+variable "dependencies" {
+  type = map(object({
+    dependent_stack_id = string
+    input_name         = optional(string)
+    output_name        = optional(string)
+    trigger_always     = optional(bool)
+  }))
+  description = "Stack dependencies to add to the stack."
+  default     = {}
+}
+
 variable "description" {
   type        = string
   description = "REQUIRED A description to describe your Spacelift stack."
