@@ -1,10 +1,10 @@
-<!-- BEGIN_TF_DOCS -->
 # Spacelift Stack Module
 
 This is a Terraform module that creates a Spacelift stack.
 Not everything is implemented yet, but we are actively building this project out.
 Please open a PR or an issue if you see missing functionality.
 
+<!-- BEGIN_TF_DOCS -->
 ## Example
 
 ```hcl
@@ -87,6 +87,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_bitbucket_cloud_namespace"></a> [bitbucket\_cloud\_namespace](#input\_bitbucket\_cloud\_namespace) | The namespace of the Bitbucket Cloud account to use for the stack. Required if cloud\_integration is BITBUCKET. | `string` | `null` | no |
 | <a name="input_cloud_integration"></a> [cloud\_integration](#input\_cloud\_integration) | The cloud integration to use for the stack. BITBUCKET or GITHUB. | `string` | `"GITHUB"` | no |
 | <a name="input_cloudformation"></a> [cloudformation](#input\_cloudformation) | Cloudformation integration configuration | <pre>object({<br/>    stack_name          = string<br/>    entry_template_file = string<br/>    region              = string<br/>    template_bucket     = string<br/>  })</pre> | `null` | no |
+| <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    dependent_stack_id = string<br/>    input_name         = optional(string)<br/>    output_name        = optional(string)<br/>    trigger_always     = optional(bool)<br/>  }))</pre> | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | REQUIRED A description to describe your Spacelift stack. | `string` | n/a | yes |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables to add to the context. | <pre>map(object({<br/>    value     = string<br/>    sensitive = optional(bool, false)<br/>  }))</pre> | `{}` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
@@ -110,3 +111,40 @@ module "ec2_worker_pool_stack" {
 |------|-------------|
 | <a name="output_id"></a> [id](#output\_id) | The ID of the stack |  
 <!-- END_TF_DOCS -->
+
+## Using Stack Dependencies
+
+You can define a stack dependency for a stacks children, it is assumed that if you want a stack to depend on something you will add the dependency to its parent.
+
+The following example will use `stack_1`'s output `my_awesome_output` as an input to `stack_2`'s input `my_awesome_variable`.
+You can also optionally set `trigger_always` in the object to always trigger the dependent stack even if the output does not change.
+```hcl
+module "stack_1" {
+
+  dependencies = {
+    STACK_2 = {
+      dependent_stack_id = module.stack_2.id
+      output_name = "my_awesome_output"
+      input_name = "TF_VAR_my_awesome_variable"
+    }
+  }
+  
+}
+
+module "stack_2" {}
+```
+
+The following example will trigger `stack_2` whenever `stack_1` is completed but will not pass any inputs and outputs.
+```hcl
+module "stack_1" {
+
+  dependencies = {
+    STACK_2 = {
+      dependent_stack_id = module.stack_2.id
+    }
+  }
+  
+}
+
+module "stack_2" {}
+```
