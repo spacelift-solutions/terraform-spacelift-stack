@@ -3,7 +3,6 @@ locals {
   is_terragrunt     = var.workflow_tool == "TERRAGRUNT"
   is_cloudformation = var.workflow_tool == "CLOUDFORMATION"
 
-
   stack_dependencies_with_inputs_and_outputs = {
     for key, value in var.dependencies : key => value if value.input_name != null && value.output_name != null
   }
