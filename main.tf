@@ -101,8 +101,8 @@ resource "spacelift_policy_attachment" "this" {
 resource "spacelift_stack_dependency" "this" {
   for_each = var.dependencies
 
-  stack_id            = spacelift_stack.this.id
-  depends_on_stack_id = each.value.dependent_stack_id
+  stack_id            = each.value.dependent_stack_id
+  depends_on_stack_id = spacelift_stack.this.id
 }
 
 resource "spacelift_stack_dependency_reference" "this" {
