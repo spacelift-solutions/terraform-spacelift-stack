@@ -66,6 +66,28 @@ module "ec2_worker_pool_stack" {
     }
   }
 
+  dependencies = {
+    MY_AWESOME_STACK = {
+      dependent_stack_id = spacelift_stack.this.id
+
+      references = {
+        INPUT_1 = {
+          input_name  = "INPUT_NAME_1"
+          output_name = "OUTPUT_NAME_1"
+        },
+        INPUT_2 = {
+          input_name     = "INPUT_NAME_2"
+          output_name    = "OUTPUT_NAME_2"
+          trigger_always = true
+        },
+      }
+    }
+
+    MY_OTHER_AWESOME_STACK = {
+      dependent_stack_id = spacelift_stack.this.id
+    }
+  }
+
   worker_pool_id = spacelift_worker_pool.this.id
   space_id       = spacelift_space.aws.id
   aws_integration = {
@@ -86,7 +108,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_aws_integration"></a> [aws\_integration](#input\_aws\_integration) | Spacelift AWS integration configuration | <pre>object({<br/>    enabled = bool<br/>    id      = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_bitbucket_cloud_namespace"></a> [bitbucket\_cloud\_namespace](#input\_bitbucket\_cloud\_namespace) | The namespace of the Bitbucket Cloud account to use for the stack. Required if cloud\_integration is BITBUCKET. | `string` | `null` | no |
 | <a name="input_cloudformation"></a> [cloudformation](#input\_cloudformation) | Cloudformation integration configuration | <pre>object({<br/>    stack_name          = string<br/>    entry_template_file = string<br/>    region              = string<br/>    template_bucket     = string<br/>  })</pre> | `null` | no |
-| <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    dependent_stack_id = string<br/>    input_name         = optional(string)<br/>    output_name        = optional(string)<br/>    trigger_always     = optional(bool)<br/>  }))</pre> | `{}` | no |
+| <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    dependent_stack_id = string<br/>    references = optional(map(object({<br/>      input_name     = string<br/>      output_name    = string<br/>      trigger_always = optional(bool)<br/>    })))<br/>  }))</pre> | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | REQUIRED A description to describe your Spacelift stack. | `string` | n/a | yes |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables to add to the context. | <pre>map(object({<br/>    value     = string<br/>    sensitive = optional(bool, false)<br/>  }))</pre> | `{}` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
@@ -124,8 +146,13 @@ module "stack_1" {
   dependencies = {
     STACK_2 = {
       dependent_stack_id = module.stack_2.id
-      output_name = "my_awesome_output"
-      input_name = "TF_VAR_my_awesome_variable"
+      
+      references = {
+        MY_AWESOME_REFERENCE = {
+          output_name = "my_awesome_output"
+          input_name = "TF_VAR_my_awesome_variable"
+        }
+      }
     }
   }
   
