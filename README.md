@@ -124,8 +124,13 @@ module "stack_1" {
   dependencies = {
     STACK_2 = {
       dependent_stack_id = module.stack_2.id
-      output_name = "my_awesome_output"
-      input_name = "TF_VAR_my_awesome_variable"
+      
+      references = {
+        MY_AWESOME_REFERENCE = {
+          output_name = "my_awesome_output"
+          input_name = "TF_VAR_my_awesome_variable"
+        }
+      }
     }
   }
   

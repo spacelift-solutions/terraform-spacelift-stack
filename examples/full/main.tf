@@ -56,6 +56,28 @@ module "ec2_worker_pool_stack" {
     }
   }
 
+  dependencies = {
+    MY_AWESOME_STACK = {
+      dependent_stack_id = spacelift_stack.this.id
+
+      references = {
+        INPUT_1 = {
+          input_name  = "INPUT_NAME_1"
+          output_name = "OUTPUT_NAME_1"
+        },
+        INPUT_2 = {
+          input_name     = "INPUT_NAME_2"
+          output_name    = "OUTPUT_NAME_2"
+          trigger_always = true
+        },
+      }
+    }
+
+    MY_OTHER_AWESOME_STACK = {
+      dependent_stack_id = spacelift_stack.this.id
+    }
+  }
+
   worker_pool_id = spacelift_worker_pool.this.id
   space_id       = spacelift_space.aws.id
   aws_integration = {

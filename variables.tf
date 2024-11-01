@@ -59,9 +59,11 @@ variable "cloudformation" {
 variable "dependencies" {
   type = map(object({
     dependent_stack_id = string
-    input_name         = optional(string)
-    output_name        = optional(string)
-    trigger_always     = optional(bool)
+    references = optional(map(object({
+      input_name     = string
+      output_name    = string
+      trigger_always = optional(bool)
+    })))
   }))
   description = "Stack dependencies to add to the stack."
   default     = {}
