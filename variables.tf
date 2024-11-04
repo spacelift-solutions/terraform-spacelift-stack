@@ -156,7 +156,7 @@ variable "terragrunt_config" {
 variable "tf_version" {
   type        = string
   description = "The version of OpenTofu/Terraform for your stack to use. Defaults to latest."
-  default     = "1.7.1"
+  default     = "latest"
 }
 
 variable "tf_workspace" {

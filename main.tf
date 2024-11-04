@@ -2,6 +2,16 @@ locals {
   is_tf_tool        = var.workflow_tool == "OPEN_TOFU" || var.workflow_tool == "TERRAFORM_FOSS"
   is_terragrunt     = var.workflow_tool == "TERRAGRUNT"
   is_cloudformation = var.workflow_tool == "CLOUDFORMATION"
+
+
+  is_latest_tf_tool = local.is_tf_tool && var.tf_version == "latest"
+  tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : var.tf_version
+}
+
+data "spacelift_tool_versions" "latest" {
+  for_each = local.is_latest_tf_tool ? toset(["TERRAFORM"]) : toset([])
+
+  tool = var.workflow_tool
 }
 
 resource "spacelift_stack" "this" {
@@ -9,7 +19,7 @@ resource "spacelift_stack" "this" {
   repository               = var.repository_name
   branch                   = var.repository_branch
   description              = var.description
-  terraform_version        = local.is_tf_tool ? var.tf_version : null
+  terraform_version        = local.tf_version
   worker_pool_id           = var.worker_pool_id
   project_root             = var.project_root
   labels                   = var.labels
