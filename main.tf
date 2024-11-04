@@ -5,7 +5,7 @@ locals {
 
 
   is_latest_tf_tool = local.is_tf_tool && var.tf_version == "latest"
-  tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : var.tf_version
+  tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : (local.is_tf_tool ? var.tf_version : null)
 }
 
 data "spacelift_tool_versions" "latest" {
