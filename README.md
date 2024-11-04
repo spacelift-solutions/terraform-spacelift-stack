@@ -9,7 +9,7 @@ Please open a PR or an issue if you see missing functionality.
 
 ```hcl
 module "ec2_worker_pool_stack" {
-  source = "../../"
+  source = "spacelift.io/spacelift-solutions/stacks-module/spacelift"
 
   name              = "worker-pool-stack"
   description       = "Stack to create a worker pool"

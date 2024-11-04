@@ -1,5 +1,5 @@
 module "ec2_worker_pool_stack" {
-  source = "../../"
+  source = "spacelift.io/spacelift-solutions/stacks-module/spacelift"
 
   name              = "worker-pool-stack"
   description       = "Stack to create a worker pool"
