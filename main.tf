@@ -28,7 +28,6 @@ resource "spacelift_stack" "this" {
   manage_state             = var.manage_state
   terraform_workflow_tool  = local.is_tf_tool ? var.workflow_tool : null
   space_id                 = var.space_id
-  runner_image             = var.runner_image
   github_action_deploy     = var.allow_promotion
   terraform_workspace      = var.tf_workspace
   additional_project_globs = var.additional_project_globs
