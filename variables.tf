@@ -83,6 +83,27 @@ variable "environment_variables" {
   default     = {}
 }
 
+variable "hooks" {
+  type = object({
+    before = optional(object({
+      init    = optional(list(string))
+      plan    = optional(list(string))
+      apply   = optional(list(string))
+      destroy = optional(list(string))
+      perform = optional(list(string))
+    }))
+    after = optional(object({
+      init    = optional(list(string))
+      plan    = optional(list(string))
+      apply   = optional(list(string))
+      destroy = optional(list(string))
+      perform = optional(list(string))
+    }))
+  })
+  description = "Hooks to add to the stack."
+  default     = {}
+}
+
 variable "labels" {
   type        = list(string)
   description = "Labels to apply to the stack being created."
@@ -191,25 +212,4 @@ variable "workflow_tool" {
     condition     = var.workflow_tool == "TERRAFORM_FOSS" || var.workflow_tool == "OPEN_TOFU" || var.workflow_tool == "CLOUDFORMATION" || var.workflow_tool == "TERRAGRUNT"
     error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, or TERRAGRUNT."
   }
-}
-
-variable "hooks" {
-  type = object({
-    before = optional(object({
-      init    = optional(list(string))
-      plan    = optional(list(string))
-      apply   = optional(list(string))
-      destroy = optional(list(string))
-      perform = optional(list(string))
-    }))
-    after = optional(object({
-      init    = optional(list(string))
-      plan    = optional(list(string))
-      apply   = optional(list(string))
-      destroy = optional(list(string))
-      perform = optional(list(string))
-    }))
-  })
-  description = "Hooks to add to the stack."
-  default     = {}
 }
