@@ -78,6 +78,19 @@ module "ec2_worker_pool_stack" {
     }
   }
 
+  hooks = {
+    after = {
+      apply = [
+        "ls -lah"
+      ]
+    },
+    before = {
+      plan = [
+        "echo 'Hello, World!'"
+      ]
+    }
+  }
+
   worker_pool_id = spacelift_worker_pool.this.id
   space_id       = spacelift_space.aws.id
   aws_integration = {

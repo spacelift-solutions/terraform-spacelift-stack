@@ -192,3 +192,24 @@ variable "workflow_tool" {
     error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, or TERRAGRUNT."
   }
 }
+
+variable "hooks" {
+  type = object({
+    before = optional(object({
+      init    = optional(list(string))
+      plan    = optional(list(string))
+      apply   = optional(list(string))
+      destroy = optional(list(string))
+      perform = optional(list(string))
+    }))
+    after = optional(object({
+      init    = optional(list(string))
+      plan    = optional(list(string))
+      apply   = optional(list(string))
+      destroy = optional(list(string))
+      perform = optional(list(string))
+    }))
+  })
+  description = "Hooks to add to the stack."
+  default     = {}
+}
