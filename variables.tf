@@ -10,16 +10,16 @@ variable "administrative" {
   default     = false
 }
 
-variable "ansible_playbook" {
-  type        = string
-  description = "The path to the Ansible playbook to use for the stack."
-  default     = null
-}
-
 variable "allow_promotion" {
   type        = bool
   description = "Whether to allow promotion of the stack to the next environment."
   default     = true
+}
+
+variable "ansible_playbook" {
+  type        = string
+  description = "The path to the Ansible playbook to use for the stack."
+  default     = null
 }
 
 variable "auto_deploy" {
