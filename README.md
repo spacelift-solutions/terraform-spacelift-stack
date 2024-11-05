@@ -146,6 +146,7 @@ module "ec2_worker_pool_stack" {
 
 | Name | Description |
 |------|-------------|
+| <a name="output_a"></a> [a](#output\_a) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | The ID of the stack |  
 <!-- END_TF_DOCS -->
 
