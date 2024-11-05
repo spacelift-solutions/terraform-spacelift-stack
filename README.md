@@ -117,6 +117,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_additional_project_globs"></a> [additional\_project\_globs](#input\_additional\_project\_globs) | Additional project globs to add to the stack. | `list(string)` | `[]` | no |
 | <a name="input_administrative"></a> [administrative](#input\_administrative) | Whether the stack is administrative or not. | `bool` | `false` | no |
 | <a name="input_allow_promotion"></a> [allow\_promotion](#input\_allow\_promotion) | Whether to allow promotion of the stack to the next environment. | `bool` | `true` | no |
+| <a name="input_ansible_playbook"></a> [ansible\_playbook](#input\_ansible\_playbook) | The path to the Ansible playbook to use for the stack. | `string` | `null` | no |
 | <a name="input_auto_deploy"></a> [auto\_deploy](#input\_auto\_deploy) | Whether to auto deploy the stack. | `bool` | `false` | no |
 | <a name="input_aws_integration"></a> [aws\_integration](#input\_aws\_integration) | Spacelift AWS integration configuration | <pre>object({<br/>    enabled = bool<br/>    id      = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_bitbucket_cloud_namespace"></a> [bitbucket\_cloud\_namespace](#input\_bitbucket\_cloud\_namespace) | The namespace of the Bitbucket Cloud account to use for the stack. Required if cloud\_integration is BITBUCKET. | `string` | `null` | no |

@@ -2,7 +2,7 @@ locals {
   is_tf_tool        = var.workflow_tool == "OPEN_TOFU" || var.workflow_tool == "TERRAFORM_FOSS"
   is_terragrunt     = var.workflow_tool == "TERRAGRUNT"
   is_cloudformation = var.workflow_tool == "CLOUDFORMATION"
-
+  is_ansible        = var.workflow_tool == "ANSIBLE"
 
   is_latest_tf_tool = local.is_tf_tool && var.tf_version == "latest"
   tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : (local.is_tf_tool ? var.tf_version : null)
@@ -97,6 +97,15 @@ resource "spacelift_stack" "this" {
       template_bucket     = var.cloudformation.template_bucket
     }
   }
+
+  dynamic "ansible" {
+    for_each = local.is_ansible ? ["ANSIBLE"] : []
+
+    content {
+      playbook = var.ansible_playbook
+    }
+  }
+
 }
 
 resource "spacelift_aws_integration_attachment" "this" {
