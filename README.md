@@ -88,6 +88,19 @@ module "ec2_worker_pool_stack" {
     }
   }
 
+  hooks = {
+    after = {
+      apply = [
+        "ls -lah"
+      ]
+    },
+    before = {
+      plan = [
+        "echo 'Hello, World!'"
+      ]
+    }
+  }
+
   worker_pool_id = spacelift_worker_pool.this.id
   space_id       = spacelift_space.aws.id
   aws_integration = {
@@ -111,6 +124,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    dependent_stack_id = string<br/>    references = optional(map(object({<br/>      input_name     = string<br/>      output_name    = string<br/>      trigger_always = optional(bool)<br/>    })))<br/>  }))</pre> | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | REQUIRED A description to describe your Spacelift stack. | `string` | n/a | yes |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables to add to the context. | <pre>map(object({<br/>    value     = string<br/>    sensitive = optional(bool, false)<br/>  }))</pre> | `{}` | no |
+| <a name="input_hooks"></a> [hooks](#input\_hooks) | Hooks to add to the stack. | <pre>object({<br/>    before = optional(object({<br/>      init    = optional(list(string))<br/>      plan    = optional(list(string))<br/>      apply   = optional(list(string))<br/>      destroy = optional(list(string))<br/>      perform = optional(list(string))<br/>    }))<br/>    after = optional(object({<br/>      init    = optional(list(string))<br/>      plan    = optional(list(string))<br/>      apply   = optional(list(string))<br/>      destroy = optional(list(string))<br/>      perform = optional(list(string))<br/>    }))<br/>  })</pre> | `{}` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
 | <a name="input_manage_state"></a> [manage\_state](#input\_manage\_state) | Should spacelift manage state files | `bool` | `true` | no |
 | <a name="input_name"></a> [name](#input\_name) | REQUIRED The name of the Spacelift stack to create. | `string` | n/a | yes |

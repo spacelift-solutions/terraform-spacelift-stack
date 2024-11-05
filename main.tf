@@ -6,6 +6,24 @@ locals {
 
   is_latest_tf_tool = local.is_tf_tool && var.tf_version == "latest"
   tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : (local.is_tf_tool ? var.tf_version : null)
+
+  hooks = {
+    before = {
+      init    = try(var.hooks.before.init, [])
+      plan    = try(var.hooks.before.plan, [])
+      apply   = try(var.hooks.before.apply, [])
+      destroy = try(var.hooks.before.destroy, [])
+      perform = try(var.hooks.before.perform, [])
+    }
+    after = {
+      init    = try(var.hooks.after.init, [])
+      plan    = try(var.hooks.after.plan, [])
+      apply   = try(var.hooks.after.apply, [])
+      destroy = try(var.hooks.after.destroy, [])
+      perform = try(var.hooks.after.perform, [])
+    }
+  }
+
 }
 
 data "spacelift_tool_versions" "latest" {
@@ -36,6 +54,18 @@ resource "spacelift_stack" "this" {
   administrative = var.administrative
 
   terraform_smart_sanitization = true
+
+  before_init    = local.hooks.before.init
+  before_plan    = local.hooks.before.plan
+  before_apply   = local.hooks.before.apply
+  before_destroy = local.hooks.before.destroy
+  before_perform = local.hooks.before.perform
+  after_init     = local.hooks.after.init
+  after_plan     = local.hooks.after.plan
+  after_apply    = local.hooks.after.apply
+  after_destroy  = local.hooks.after.destroy
+  after_perform  = local.hooks.after.perform
+
 
   dynamic "terragrunt" {
     for_each = local.is_terragrunt ? ["TERRAGRUNT"] : []

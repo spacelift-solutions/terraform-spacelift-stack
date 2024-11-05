@@ -83,6 +83,27 @@ variable "environment_variables" {
   default     = {}
 }
 
+variable "hooks" {
+  type = object({
+    before = optional(object({
+      init    = optional(list(string))
+      plan    = optional(list(string))
+      apply   = optional(list(string))
+      destroy = optional(list(string))
+      perform = optional(list(string))
+    }))
+    after = optional(object({
+      init    = optional(list(string))
+      plan    = optional(list(string))
+      apply   = optional(list(string))
+      destroy = optional(list(string))
+      perform = optional(list(string))
+    }))
+  })
+  description = "Hooks to add to the stack."
+  default     = {}
+}
+
 variable "labels" {
   type        = list(string)
   description = "Labels to apply to the stack being created."
