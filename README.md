@@ -151,16 +151,14 @@ module "ec2_worker_pool_stack" {
 
 ## Using Stack Dependencies
 
-You can define a stack dependency for a stacks children, it is assumed that if you want a stack to depend on something you will add the dependency to its parent.
-
-The following example will use `stack_1`'s output `my_awesome_output` as an input to `stack_2`'s input `my_awesome_variable`.
+The following example will use `stack_1`'s output `my_awesome_output` as an input to `stack_2`'s input `my_awesome_variable`. Setting `child_stack_id` will configure the right side of the dependency view in the UI.
 You can also optionally set `trigger_always` in the object to always trigger the dependent stack even if the output does not change.
 ```hcl
 module "stack_1" {
 
   dependencies = {
     STACK_2 = {
-      dependent_stack_id = module.stack_2.id
+      child_stack_id = module.stack_2.id
       
       references = {
         MY_AWESOME_REFERENCE = {
@@ -176,13 +174,36 @@ module "stack_1" {
 module "stack_2" {}
 ```
 
+Likewise, you can also setup dependencies that a child needs from a parent stack. Setting `parent_stack_id` will configure the left side of the dependency view in the UI.
+The following example and the previous example are equivalent.
+```hcl
+module "stack_1" {}
+
+module "stack_2" {
+  
+  dependencies = {
+    STACK_1 = {
+      parent_stack_id = module.stack_1.id
+
+      references = {
+        MY_AWESOME_REFERENCE = {
+          output_name = "my_awesome_output"
+          input_name = "TF_VAR_my_awesome_variable"
+        }
+      }
+    }
+  }
+  
+}
+```
+
 The following example will trigger `stack_2` whenever `stack_1` is completed but will not pass any inputs and outputs.
 ```hcl
 module "stack_1" {
 
   dependencies = {
     STACK_2 = {
-      dependent_stack_id = module.stack_2.id
+      child_stack_id = module.stack_2.id
     }
   }
   

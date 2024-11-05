@@ -64,7 +64,8 @@ variable "cloudformation" {
 
 variable "dependencies" {
   type = map(object({
-    dependent_stack_id = string
+    parent_stack_id = optional(string)
+    child_stack_id  = optional(string)
     references = optional(map(object({
       input_name     = string
       output_name    = string
@@ -73,6 +74,15 @@ variable "dependencies" {
   }))
   description = "Stack dependencies to add to the stack."
   default     = {}
+
+  validation {
+    condition = alltrue(flatten([
+      for key, value in var.dependencies : [
+        (value.parent_stack_id != null && value.child_stack_id == null) || (value.parent_stack_id == null && value.child_stack_id != null),
+      ]
+    ]))
+    error_message = "You must provide either a parent_stack_id or a child_stack_id, but not both."
+  }
 }
 
 variable "description" {
