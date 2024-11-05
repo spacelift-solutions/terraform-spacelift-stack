@@ -68,7 +68,7 @@ module "ec2_worker_pool_stack" {
 
   dependencies = {
     MY_AWESOME_STACK = {
-      dependent_stack_id = spacelift_stack.this.id
+      child_stack_id = spacelift_stack.this.id
 
       references = {
         INPUT_1 = {
@@ -122,7 +122,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_aws_integration"></a> [aws\_integration](#input\_aws\_integration) | Spacelift AWS integration configuration | <pre>object({<br/>    enabled = bool<br/>    id      = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_bitbucket_cloud_namespace"></a> [bitbucket\_cloud\_namespace](#input\_bitbucket\_cloud\_namespace) | The namespace of the Bitbucket Cloud account to use for the stack. Required if cloud\_integration is BITBUCKET. | `string` | `null` | no |
 | <a name="input_cloudformation"></a> [cloudformation](#input\_cloudformation) | Cloudformation integration configuration | <pre>object({<br/>    stack_name          = string<br/>    entry_template_file = string<br/>    region              = string<br/>    template_bucket     = string<br/>  })</pre> | `null` | no |
-| <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    dependent_stack_id = string<br/>    references = optional(map(object({<br/>      input_name     = string<br/>      output_name    = string<br/>      trigger_always = optional(bool)<br/>    })))<br/>  }))</pre> | `{}` | no |
+| <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    parent_stack_id = optional(string)<br/>    child_stack_id  = optional(string)<br/>    references = optional(map(object({<br/>      input_name     = string<br/>      output_name    = string<br/>      trigger_always = optional(bool)<br/>    })))<br/>  }))</pre> | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | REQUIRED A description to describe your Spacelift stack. | `string` | n/a | yes |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables to add to the context. | <pre>map(object({<br/>    value     = string<br/>    sensitive = optional(bool, false)<br/>  }))</pre> | `{}` | no |
 | <a name="input_hooks"></a> [hooks](#input\_hooks) | Hooks to add to the stack. | <pre>object({<br/>    before = optional(object({<br/>      init    = optional(list(string))<br/>      plan    = optional(list(string))<br/>      apply   = optional(list(string))<br/>      destroy = optional(list(string))<br/>      perform = optional(list(string))<br/>    }))<br/>    after = optional(object({<br/>      init    = optional(list(string))<br/>      plan    = optional(list(string))<br/>      apply   = optional(list(string))<br/>      destroy = optional(list(string))<br/>      perform = optional(list(string))<br/>    }))<br/>  })</pre> | `{}` | no |
@@ -151,16 +151,14 @@ module "ec2_worker_pool_stack" {
 
 ## Using Stack Dependencies
 
-You can define a stack dependency for a stacks children, it is assumed that if you want a stack to depend on something you will add the dependency to its parent.
-
-The following example will use `stack_1`'s output `my_awesome_output` as an input to `stack_2`'s input `my_awesome_variable`.
+The following example will use `stack_1`'s output `my_awesome_output` as an input to `stack_2`'s input `my_awesome_variable`. Setting `child_stack_id` will configure the right side of the dependency view in the UI.
 You can also optionally set `trigger_always` in the object to always trigger the dependent stack even if the output does not change.
 ```hcl
 module "stack_1" {
 
   dependencies = {
     STACK_2 = {
-      dependent_stack_id = module.stack_2.id
+      child_stack_id = module.stack_2.id
       
       references = {
         MY_AWESOME_REFERENCE = {
@@ -176,13 +174,36 @@ module "stack_1" {
 module "stack_2" {}
 ```
 
+Likewise, you can also setup dependencies that a child needs from a parent stack. Setting `parent_stack_id` will configure the left side of the dependency view in the UI.
+The following example and the previous example are equivalent.
+```hcl
+module "stack_1" {}
+
+module "stack_2" {
+  
+  dependencies = {
+    STACK_1 = {
+      parent_stack_id = module.stack_1.id
+
+      references = {
+        MY_AWESOME_REFERENCE = {
+          output_name = "my_awesome_output"
+          input_name = "TF_VAR_my_awesome_variable"
+        }
+      }
+    }
+  }
+  
+}
+```
+
 The following example will trigger `stack_2` whenever `stack_1` is completed but will not pass any inputs and outputs.
 ```hcl
 module "stack_1" {
 
   dependencies = {
     STACK_2 = {
-      dependent_stack_id = module.stack_2.id
+      child_stack_id = module.stack_2.id
     }
   }
   

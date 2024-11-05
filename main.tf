@@ -164,8 +164,8 @@ locals {
 resource "spacelift_stack_dependency" "this" {
   for_each = var.dependencies
 
-  stack_id            = each.value.dependent_stack_id
-  depends_on_stack_id = spacelift_stack.this.id
+  stack_id            = each.value.child_stack_id != null ? each.value.child_stack_id : spacelift_stack.this.id
+  depends_on_stack_id = each.value.parent_stack_id != null ? each.value.parent_stack_id : spacelift_stack.this.id
 }
 
 resource "spacelift_stack_dependency_reference" "this" {

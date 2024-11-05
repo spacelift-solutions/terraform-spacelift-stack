@@ -58,7 +58,7 @@ module "ec2_worker_pool_stack" {
 
   dependencies = {
     MY_AWESOME_STACK = {
-      dependent_stack_id = spacelift_stack.this.id
+      child_stack_id = spacelift_stack.this.id
 
       references = {
         INPUT_1 = {
