@@ -120,6 +120,18 @@ variable "hooks" {
   default     = {}
 }
 
+variable "kubernetes_config" {
+  type = object({
+    kubectl_version = string
+    namespace       = optional(string)
+  })
+  description = "Kubernetes integration configuration"
+  default = {
+    kubectl_version = "latest"
+    namespace       = null
+  }
+}
+
 variable "labels" {
   type        = list(string)
   description = "Labels to apply to the stack being created."
@@ -227,17 +239,5 @@ variable "workflow_tool" {
   validation {
     condition     = contains(["TERRAFORM_FOSS", "OPEN_TOFU", "CLOUDFORMATION", "TERRAGRUNT", "ANSIBLE", "KUBERNETES"], var.workflow_tool)
     error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, ANSIBLE, KUBERNETES, or TERRAGRUNT."
-  }
-}
-
-variable "kubernetes_config" {
-  type = object({
-    kubectl_version = string
-    namespace       = optional(string)
-  })
-  description = "Kubernetes integration configuration"
-  default = {
-    kubectl_version = "latest"
-    namespace       = null
   }
 }
