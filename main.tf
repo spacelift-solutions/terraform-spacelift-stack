@@ -3,9 +3,13 @@ locals {
   is_terragrunt     = var.workflow_tool == "TERRAGRUNT"
   is_cloudformation = var.workflow_tool == "CLOUDFORMATION"
   is_ansible        = var.workflow_tool == "ANSIBLE"
+  is_kubernetes     = var.workflow_tool == "KUBERNETES"
 
   is_latest_tf_tool = local.is_tf_tool && var.tf_version == "latest"
   tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : (local.is_tf_tool ? var.tf_version : null)
+
+  is_latest_k8s_tool = local.is_kubernetes && var.kubernetes_config.kubectl_version == "latest"
+  k8s_version        = local.is_latest_k8s_tool ? data.spacelift_tool_versions.k8s_latest["KUBERNETES"].versions[0] : (local.is_kubernetes ? var.kubernetes_config.kubectl_version : null)
 
   hooks = {
     before = {
@@ -30,6 +34,12 @@ data "spacelift_tool_versions" "latest" {
   for_each = local.is_latest_tf_tool ? toset(["TERRAFORM"]) : toset([])
 
   tool = var.workflow_tool
+}
+
+data "spacelift_tool_versions" "k8s_latest" {
+  for_each = local.is_latest_k8s_tool ? toset(["KUBERNETES"]) : toset([])
+
+  tool = "KUBECTL"
 }
 
 resource "spacelift_stack" "this" {
@@ -103,6 +113,15 @@ resource "spacelift_stack" "this" {
 
     content {
       playbook = var.ansible_playbook
+    }
+  }
+
+  dynamic "kubernetes" {
+    for_each = local.is_kubernetes ? ["KUBERNETES"] : []
+
+    content {
+      kubectl_version = local.k8s_version
+      namespace       = var.kubernetes_config.namespace
     }
   }
 

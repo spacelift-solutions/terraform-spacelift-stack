@@ -27,6 +27,11 @@ module "ec2_worker_pool_stack" {
     template_bucket     = "my-template-bucket"
   }
 
+  kubernetes_config = {
+    kubectl_version = "latest"
+    namespace       = "default"
+  }
+
   terragrunt_config = {
     terragrunt_version   = "0.66.3"
     terraform_version    = "1.8.1"

@@ -225,7 +225,19 @@ variable "workflow_tool" {
   default     = "OPEN_TOFU"
 
   validation {
-    condition     = var.workflow_tool == "TERRAFORM_FOSS" || var.workflow_tool == "OPEN_TOFU" || var.workflow_tool == "CLOUDFORMATION" || var.workflow_tool == "TERRAGRUNT" || var.workflow_tool == "ANSIBLE"
-    error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, ANSIBLE, or TERRAGRUNT."
+    condition     = contains(["TERRAFORM_FOSS", "OPEN_TOFU", "CLOUDFORMATION", "TERRAGRUNT", "ANSIBLE", "KUBERNETES"], var.workflow_tool)
+    error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, ANSIBLE, KUBERNETES, or TERRAGRUNT."
+  }
+}
+
+variable "kubernetes_config" {
+  type = object({
+    kubectl_version = string
+    namespace       = optional(string)
+  })
+  description = "Kubernetes integration configuration"
+  default = {
+    kubectl_version = "latest"
+    namespace       = null
   }
 }
