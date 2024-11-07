@@ -37,6 +37,11 @@ module "ec2_worker_pool_stack" {
     template_bucket     = "my-template-bucket"
   }
 
+  kubernetes_config = {
+    kubectl_version = "latest"
+    namespace       = "default"
+  }
+
   terragrunt_config = {
     terragrunt_version   = "0.66.3"
     terraform_version    = "1.8.1"
@@ -126,6 +131,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_description"></a> [description](#input\_description) | REQUIRED A description to describe your Spacelift stack. | `string` | n/a | yes |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables to add to the context. | <pre>map(object({<br/>    value     = string<br/>    sensitive = optional(bool, false)<br/>  }))</pre> | `{}` | no |
 | <a name="input_hooks"></a> [hooks](#input\_hooks) | Hooks to add to the stack. | <pre>object({<br/>    before = optional(object({<br/>      init    = optional(list(string))<br/>      plan    = optional(list(string))<br/>      apply   = optional(list(string))<br/>      destroy = optional(list(string))<br/>      perform = optional(list(string))<br/>    }))<br/>    after = optional(object({<br/>      init    = optional(list(string))<br/>      plan    = optional(list(string))<br/>      apply   = optional(list(string))<br/>      destroy = optional(list(string))<br/>      perform = optional(list(string))<br/>    }))<br/>  })</pre> | `{}` | no |
+| <a name="input_kubernetes_config"></a> [kubernetes\_config](#input\_kubernetes\_config) | Kubernetes integration configuration | <pre>object({<br/>    kubectl_version = string<br/>    namespace       = optional(string)<br/>  })</pre> | <pre>{<br/>  "kubectl_version": "latest",<br/>  "namespace": null<br/>}</pre> | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
 | <a name="input_manage_state"></a> [manage\_state](#input\_manage\_state) | Should spacelift manage state files | `bool` | `true` | no |
 | <a name="input_name"></a> [name](#input\_name) | REQUIRED The name of the Spacelift stack to create. | `string` | n/a | yes |
