@@ -112,6 +112,14 @@ module "ec2_worker_pool_stack" {
     enabled = true
     id      = spacelift_aws_integration.work.id
   }
+
+  drift_detection = {
+    enabled      = true
+    schedule     = ["*/15 * * * *"]
+    reconcile    = true
+    ignore_state = false
+    timezone     = "UTC"
+  }
 }
 ```
 
