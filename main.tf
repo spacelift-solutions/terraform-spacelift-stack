@@ -195,3 +195,13 @@ resource "spacelift_stack_dependency_reference" "this" {
   output_name         = each.value.output_name
   trigger_always      = each.value.trigger_always
 }
+
+resource "spacelift_drift_detection" "this" {
+  for_each = var.drift_detection.enabled ? toset(["ENABLED"]) : toset([])
+
+  stack_id     = spacelift_stack.this.id
+  schedule     = var.drift_detection.schedule
+  reconcile    = var.drift_detection.reconcile
+  timezone     = var.drift_detection.timezone
+  ignore_state = var.drift_detection.ignore_state
+}
