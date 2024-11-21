@@ -90,6 +90,26 @@ variable "description" {
   description = "REQUIRED A description to describe your Spacelift stack."
 }
 
+variable "drift_detection" {
+  type = object({
+    enabled      = bool
+    schedule     = optional(list(string))
+    ignore_state = optional(bool)
+    timezone     = optional(string)
+    reconcile    = optional(bool)
+  })
+  description = "Drift detection configuration for stack"
+
+  default = {
+    enabled = false
+  }
+
+  validation {
+    condition     = var.drift_detection.enabled == false || (var.drift_detection.enabled && var.drift_detection.schedule != null)
+    error_message = "The schedule must be included if drift detection is enabled"
+  }
+}
+
 variable "environment_variables" {
   type = map(object({
     value     = string
