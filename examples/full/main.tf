@@ -16,9 +16,16 @@ module "ec2_worker_pool_stack" {
   tf_workspace    = "worker-pool"
   workflow_tool   = "OPEN_TOFU"
 
-  bitbucket_cloud_namespace = "spacelift"
-  cloud_integration         = "GITHUB"
-  runner_image              = "public.ecr.aws/spacelift/runner-terraform"
+  runner_image = "public.ecr.aws/spacelift/runner-terraform"
+
+  vcs = {
+    type       = "GITHUB"
+    enterprise = false
+    id         = "my-github-integration-id"
+    namespace  = "my-namespace"
+    url        = "my-url"
+
+  }
 
   cloudformation = {
     stack_name          = "worker-pool"

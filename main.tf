@@ -90,10 +90,47 @@ resource "spacelift_stack" "this" {
   }
 
   dynamic "bitbucket_cloud" {
-    for_each = var.vcs_integration == "BITBUCKET" ? ["BITBUCKET"] : []
+    for_each = (var.vcs.type == "BITBUCKET" && !var.vcs.enterprise) || (var.vcs.type == "BITBUCKET" && var.vcs.enterprise == null) ? ["BITBUCKET"] : []
 
     content {
-      namespace = var.bitbucket_cloud_namespace
+      namespace = var.vcs.namespace
+      id        = var.vcs.id
+    }
+  }
+
+  dynamic "bitbucket_datacenter" {
+    for_each = var.vcs.type == "BITBUCKET" && var.vcs.enterprise != null && var.vcs.enterprise ? ["BITBUCKET"] : []
+
+    content {
+      namespace = var.vcs.namespace
+      id        = var.vcs.id
+    }
+  }
+
+  dynamic "github_enterprise" {
+    for_each = var.vcs.type == "GITHUB" && var.vcs.enterprise != null && var.vcs.enterprise ? ["GITHUB"] : []
+
+    content {
+      namespace = var.vcs.namespace
+      id        = var.vcs.id
+    }
+  }
+
+  dynamic "gitlab" {
+    for_each = var.vcs.type == "GITLAB" ? ["GITLAB"] : []
+
+    content {
+      namespace = var.vcs.namespace
+      id        = var.vcs.id
+    }
+  }
+
+  dynamic "raw_git" {
+    for_each = var.vcs.type == "RAW_GIT" ? ["RAW_GIT"] : []
+
+    content {
+      namespace = var.vcs.namespace
+      url       = var.vcs.url
     }
   }
 

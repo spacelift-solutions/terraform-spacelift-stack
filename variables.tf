@@ -45,12 +45,6 @@ variable "aws_integration" {
   }
 }
 
-variable "bitbucket_cloud_namespace" {
-  type        = string
-  description = "The namespace of the Bitbucket Cloud account to use for the stack. Required if cloud_integration is BITBUCKET."
-  default     = null
-}
-
 variable "cloudformation" {
   type = object({
     stack_name          = string
@@ -234,14 +228,37 @@ variable "tf_workspace" {
   default     = null
 }
 
-variable "vcs_integration" {
-  type        = string
-  description = "The cloud integration to use for the stack. BITBUCKET or GITHUB."
-  default     = "GITHUB"
+variable "vcs" {
+  type = object({
+    type       = string
+    enterprise = optional(bool, false)
+    namespace  = optional(string)
+    id         = optional(string)
+    url        = optional(string)
+  })
+  description = "VCS integration configuration"
+  default = {
+    type = "GITHUB"
+  }
 
   validation {
-    condition     = var.vcs_integration == "BITBUCKET" || var.vcs_integration == "GITHUB"
-    error_message = "The cloud integration must be either BITBUCKET or GITHUB."
+    condition     = var.vcs.type == "BITBUCKET" || var.vcs.type == "GITHUB" || var.vcs.type == "GITLAB" || var.vcs.type == "RAW_GIT"
+    error_message = "The vcs.type must be either BITBUCKET, GITLAB, RAW_GIT, or GITHUB."
+  }
+
+  validation {
+    condition     = ((var.vcs.type == "BITBUCKET" || var.vcs.type == "GITLAB") && var.vcs.namespace != null) || var.vcs.type == "GITHUB" || var.vcs.type == "RAW_GIT"
+    error_message = "The vcs.namespace must be included if vcs.type is BITBUCKET or GITLAB."
+  }
+
+  validation {
+    condition     = (var.vcs.type == "GITHUB" && var.vcs.enterprise && var.vcs.namespace != null) || (var.vcs.type == "GITHUB" && !var.vcs.enterprise) || var.vcs.type == "RAW_GIT" || var.vcs.type == "BITBUCKET" || var.vcs.type == "GITLAB"
+    error_message = "The vcs.namespace must be included if vcs.type is GITHUB and vcs.enterprise is true."
+  }
+
+  validation {
+    condition     = (var.vcs.type == "RAW_GIT" && var.vcs.url != null && var.vcs.namespace != null) || var.vcs.type == "GITHUB" || var.vcs.type == "BITBUCKET" || var.vcs.type == "GITLAB"
+    error_message = "The vcs.url and vcs.namespace must be included if vcs.type is RAW_GIT."
   }
 }
 
