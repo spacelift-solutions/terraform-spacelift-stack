@@ -228,18 +228,6 @@ variable "terragrunt_config" {
   }
 }
 
-variable "pulumi" {
-  type = object({
-    login_url    = string
-    stack_name   = string
-  })
-  description = "config for pulumi in spacelift"
-  default = {
-    login_url = null
-    stack_name = null
-  }
-}
-
 variable "tf_version" {
   type        = string
   description = "The version of OpenTofu/Terraform for your stack to use. Defaults to latest."
@@ -298,7 +286,7 @@ variable "workflow_tool" {
   default     = "OPEN_TOFU"
 
   validation {
-    condition     = contains(["TERRAFORM_FOSS", "OPEN_TOFU", "CLOUDFORMATION", "TERRAGRUNT", "ANSIBLE", "KUBERNETES"], var.workflow_tool)
-    error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, ANSIBLE, KUBERNETES, or TERRAGRUNT."
+    condition     = contains(["TERRAFORM_FOSS", "OPEN_TOFU", "CLOUDFORMATION", "TERRAGRUNT", "ANSIBLE", "KUBERNETES", "PULUMI"], var.workflow_tool)
+    error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, ANSIBLE, KUBERNETES, PULUMI or TERRAGRUNT."
   }
 }
