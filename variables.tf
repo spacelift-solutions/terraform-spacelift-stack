@@ -178,6 +178,18 @@ variable "project_root" {
   default     = null
 }
 
+variable "pulumi" {
+  type = object({
+    login_url  = string
+    stack_name = string
+  })
+  description = "config for pulumi in spacelift"
+  default = {
+    login_url  = null
+    stack_name = null
+  }
+}
+
 variable "repository_branch" {
   type        = string
   description = "The name of the branch to use for the specified Git repository."
@@ -213,18 +225,6 @@ variable "terragrunt_config" {
     terraform_version  = null
     terragrunt_version = null
     tool               = null
-  }
-}
-
-variable "pulumi" {
-  type = object({
-    login_url    = string
-    stack_name   = string
-  })
-  description = "config for pulumi in spacelift"
-  default = {
-    login_url = null
-    stack_name = null
   }
 }
 
