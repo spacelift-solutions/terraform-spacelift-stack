@@ -4,6 +4,7 @@ locals {
   is_cloudformation = var.workflow_tool == "CLOUDFORMATION"
   is_ansible        = var.workflow_tool == "ANSIBLE"
   is_kubernetes     = var.workflow_tool == "KUBERNETES"
+  is_pulumi         = var.workflow_tool == "PULUMI"
 
   is_latest_tf_tool = local.is_tf_tool && var.tf_version == "latest"
   tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : (local.is_tf_tool ? var.tf_version : null)
@@ -76,6 +77,14 @@ resource "spacelift_stack" "this" {
   after_destroy  = local.hooks.after.destroy
   after_perform  = local.hooks.after.perform
 
+  dynamic "pulumi" {
+    for_each = local.is_pulumi ? ["PULUMI"] : []
+
+    content {
+      login_url  = var.pulumi.login_url
+      stack_name = var.pulumi.stack_name
+    }
+  }
 
   dynamic "terragrunt" {
     for_each = local.is_terragrunt ? ["TERRAGRUNT"] : []

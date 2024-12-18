@@ -216,6 +216,18 @@ variable "terragrunt_config" {
   }
 }
 
+variable "pulumi" {
+  type = object({
+    login_url    = string
+    stack_name   = string
+  })
+  description = "config for pulumi in spacelift"
+  default = {
+    login_url = null
+    stack_name = null
+  }
+}
+
 variable "tf_version" {
   type        = string
   description = "The version of OpenTofu/Terraform for your stack to use. Defaults to latest."
