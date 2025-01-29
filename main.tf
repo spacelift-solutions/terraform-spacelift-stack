@@ -192,13 +192,6 @@ resource "spacelift_environment_variable" "this" {
   write_only = each.value.sensitive
 }
 
-resource "spacelift_context_attachment" "this" {
-  for_each = var.contexts
-
-  stack_id   = spacelift_stack.this.id
-  context_id = each.value.id
-}
-
 resource "spacelift_policy" "this" {
   for_each = var.policies
 
