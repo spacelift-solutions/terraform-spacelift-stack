@@ -61,6 +61,7 @@ resource "spacelift_stack" "this" {
   github_action_deploy     = var.allow_promotion
   terraform_workspace      = var.tf_workspace
   additional_project_globs = var.additional_project_globs
+  protect_from_deletion    = var.protect_from_deletion
 
   administrative = var.administrative
 
@@ -189,6 +190,13 @@ resource "spacelift_environment_variable" "this" {
   name       = each.key
   value      = each.value.value
   write_only = each.value.sensitive
+}
+
+resource "spacelift_context_attachment" "this" {
+  for_each = var.contexts
+
+  stack_id   = spacelift_stack.this.id
+  context_id = each.value.id
 }
 
 resource "spacelift_policy" "this" {
