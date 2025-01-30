@@ -73,9 +73,15 @@ module "ec2_worker_pool_stack" {
   }
 
   policies = {
+    # This example will create a policy and attach it to the stack
     MY_AWESOME_PUSH_POLICY = {
       file_path = "./policies/push/awesome.rego"
       type      = "GIT_PUSH"
+    }
+
+    # This example will use an externally managed policy and attach it to the stack
+    MY_EXTERNALLY_MANAGED_STACK = {
+      policy_id = spacelift_policy.this.id
     }
   }
 
@@ -151,7 +157,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
 | <a name="input_manage_state"></a> [manage\_state](#input\_manage\_state) | Should spacelift manage state files | `bool` | `true` | no |
 | <a name="input_name"></a> [name](#input\_name) | REQUIRED The name of the Spacelift stack to create. | `string` | n/a | yes |
-| <a name="input_policies"></a> [policies](#input\_policies) | Policies to add to the stack. | <pre>map(object({<br/>    file_path = string<br/>    type      = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_policies"></a> [policies](#input\_policies) | Policies to add to the stack. | <pre>map(object({<br/>    file_path = optional(string)<br/>    type      = optional(string)<br/>    policy_id = optional(string)<br/>  }))</pre> | `{}` | no |
 | <a name="input_project_root"></a> [project\_root](#input\_project\_root) | The path to your project root in your repository to use as the root of the stack. Defaults to root of the repository. | `string` | `null` | no |
 | <a name="input_protect_from_deletion"></a> [protect\_from\_deletion](#input\_protect\_from\_deletion) | Whether to protect the stack from deletion. | `bool` | `false` | no |
 | <a name="input_pulumi"></a> [pulumi](#input\_pulumi) | config for pulumi in spacelift | <pre>object({<br/>    login_url  = string<br/>    stack_name = string<br/>  })</pre> | <pre>{<br/>  "login_url": null,<br/>  "stack_name": null<br/>}</pre> | no |
