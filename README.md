@@ -11,13 +11,14 @@ Please open a PR or an issue if you see missing functionality.
 module "ec2_worker_pool_stack" {
   source = "spacelift.io/spacelift-solutions/stacks-module/spacelift"
 
-  name              = "worker-pool-stack"
-  description       = "Stack to create a worker pool"
-  repository_name   = "spacelift"
-  repository_branch = "main"
-  project_root      = "aws/ecs-worker-pool"
-  labels            = ["worker-pool", "example"]
-  manage_state      = true
+  name                  = "worker-pool-stack"
+  description           = "Stack to create a worker pool"
+  repository_name       = "spacelift"
+  repository_branch     = "main"
+  project_root          = "aws/ecs-worker-pool"
+  labels                = ["worker-pool", "example"]
+  manage_state          = true
+  protect_from_deletion = true
 
   auto_deploy     = true
   administrative  = true
@@ -152,6 +153,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_name"></a> [name](#input\_name) | REQUIRED The name of the Spacelift stack to create. | `string` | n/a | yes |
 | <a name="input_policies"></a> [policies](#input\_policies) | Policies to add to the stack. | <pre>map(object({<br/>    file_path = string<br/>    type      = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_project_root"></a> [project\_root](#input\_project\_root) | The path to your project root in your repository to use as the root of the stack. Defaults to root of the repository. | `string` | `null` | no |
+| <a name="input_protect_from_deletion"></a> [protect\_from\_deletion](#input\_protect\_from\_deletion) | Whether to protect the stack from deletion. | `bool` | `false` | no |
 | <a name="input_pulumi"></a> [pulumi](#input\_pulumi) | config for pulumi in spacelift | <pre>object({<br/>    login_url  = string<br/>    stack_name = string<br/>  })</pre> | <pre>{<br/>  "login_url": null,<br/>  "stack_name": null<br/>}</pre> | no |
 | <a name="input_repository_branch"></a> [repository\_branch](#input\_repository\_branch) | The name of the branch to use for the specified Git repository. | `string` | `"main"` | no |
 | <a name="input_repository_name"></a> [repository\_name](#input\_repository\_name) | REQUIRED The name of the Git repository for the stack to use. | `string` | n/a | yes |
