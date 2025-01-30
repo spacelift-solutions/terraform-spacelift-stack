@@ -192,8 +192,27 @@ resource "spacelift_environment_variable" "this" {
   write_only = each.value.sensitive
 }
 
+locals {
+  policies = {
+    for key, policy in var.policies : key => {
+      file_path = policy.file_path
+      type      = policy.type
+    } if policy.file_path != null && policy.type != null
+  }
+
+  policy_attachments = {
+    for key, policy in var.policies : key => {
+      policy_id = policy.policy_id
+      # This MUST check if the file_path and type are null because we will run into the
+      # invalid for each argument if we check the policy_id since the policy_id could potentially
+      # be created in the same run which will cause the policy_id to be unknown until apply.
+      # This should be fine since the variable's validation checks these are mutually exclusive.
+    } if policy.file_path == null && policy.type == null
+  }
+}
+
 resource "spacelift_policy" "this" {
-  for_each = var.policies
+  for_each = local.policies
 
   name = each.key
   body = file(each.value.file_path)
@@ -203,9 +222,16 @@ resource "spacelift_policy" "this" {
 }
 
 resource "spacelift_policy_attachment" "this" {
-  for_each = var.policies
+  for_each = local.policies
 
   policy_id = spacelift_policy.this[each.key].id
+  stack_id  = spacelift_stack.this.id
+}
+
+resource "spacelift_policy_attachment" "external_attachments" {
+  for_each = local.policy_attachments
+
+  policy_id = each.value.policy_id
   stack_id  = spacelift_stack.this.id
 }
 

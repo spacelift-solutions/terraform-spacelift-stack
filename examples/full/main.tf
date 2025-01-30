@@ -63,9 +63,15 @@ module "ec2_worker_pool_stack" {
   }
 
   policies = {
+    # This example will create a policy and attach it to the stack
     MY_AWESOME_PUSH_POLICY = {
       file_path = "./policies/push/awesome.rego"
       type      = "GIT_PUSH"
+    }
+
+    # This example will use an externally managed policy and attach it to the stack
+    MY_EXTERNALLY_MANAGED_STACK = {
+      policy_id = spacelift_policy.this.id
     }
   }
 

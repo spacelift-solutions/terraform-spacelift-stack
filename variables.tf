@@ -165,11 +165,21 @@ variable "name" {
 
 variable "policies" {
   type = map(object({
-    file_path = string
-    type      = string
+    file_path = optional(string)
+    type      = optional(string)
+    policy_id = optional(string)
   }))
   description = "Policies to add to the stack."
   default     = {}
+
+  validation {
+    condition = alltrue(flatten([
+      for key, value in var.policies : [
+        (value.file_path != null && value.type != null && value.policy_id == null) || (value.file_path == null && value.type == null && value.policy_id != null),
+      ]
+    ]))
+    error_message = "You must provide either a file_path and type or a policy_id, but not both."
+  }
 }
 
 variable "project_root" {
