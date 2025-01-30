@@ -1,13 +1,14 @@
 module "ec2_worker_pool_stack" {
   source = "spacelift.io/spacelift-solutions/stacks-module/spacelift"
 
-  name              = "worker-pool-stack"
-  description       = "Stack to create a worker pool"
-  repository_name   = "spacelift"
-  repository_branch = "main"
-  project_root      = "aws/ecs-worker-pool"
-  labels            = ["worker-pool", "example"]
-  manage_state      = true
+  name                  = "worker-pool-stack"
+  description           = "Stack to create a worker pool"
+  repository_name       = "spacelift"
+  repository_branch     = "main"
+  project_root          = "aws/ecs-worker-pool"
+  labels                = ["worker-pool", "example"]
+  manage_state          = true
+  protect_from_deletion = true
 
   auto_deploy     = true
   administrative  = true

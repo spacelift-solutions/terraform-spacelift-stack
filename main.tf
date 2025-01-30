@@ -61,6 +61,7 @@ resource "spacelift_stack" "this" {
   github_action_deploy     = var.allow_promotion
   terraform_workspace      = var.tf_workspace
   additional_project_globs = var.additional_project_globs
+  protect_from_deletion    = var.protect_from_deletion
 
   administrative = var.administrative
 

@@ -178,6 +178,12 @@ variable "project_root" {
   default     = null
 }
 
+variable "protect_from_deletion" {
+  type        = bool
+  description = "Whether to protect the stack from deletion."
+  default     = false
+}
+
 variable "pulumi" {
   type = object({
     login_url  = string
