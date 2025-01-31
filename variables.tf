@@ -56,6 +56,12 @@ variable "cloudformation" {
   default     = null
 }
 
+variable "contexts" {
+  type        = map(string)
+  description = "Contexts to add to the stack."
+  default     = {}
+}
+
 variable "dependencies" {
   type = map(object({
     parent_stack_id = optional(string)
@@ -164,10 +170,7 @@ variable "name" {
 }
 
 variable "policies" {
-  type = map(object({
-    file_path = string
-    type      = string
-  }))
+  type        = map(string)
   description = "Policies to add to the stack."
   default     = {}
 }
