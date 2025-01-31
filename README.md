@@ -73,10 +73,11 @@ module "ec2_worker_pool_stack" {
   }
 
   policies = {
-    MY_AWESOME_PUSH_POLICY = {
-      file_path = "./policies/push/awesome.rego"
-      type      = "GIT_PUSH"
-    }
+    MY_AWESOME_PUSH_POLICY = spacelift_policy.this.id
+  }
+
+  contexts = {
+    MY_AWESOME_CONTEXT = spacelift.context.id
   }
 
   dependencies = {
@@ -142,6 +143,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_auto_deploy"></a> [auto\_deploy](#input\_auto\_deploy) | Whether to auto deploy the stack. | `bool` | `false` | no |
 | <a name="input_aws_integration"></a> [aws\_integration](#input\_aws\_integration) | Spacelift AWS integration configuration | <pre>object({<br/>    enabled = bool<br/>    id      = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_cloudformation"></a> [cloudformation](#input\_cloudformation) | Cloudformation integration configuration | <pre>object({<br/>    stack_name          = string<br/>    entry_template_file = string<br/>    region              = string<br/>    template_bucket     = string<br/>  })</pre> | `null` | no |
+| <a name="input_contexts"></a> [contexts](#input\_contexts) | Contexts to add to the stack. | `map(string)` | `{}` | no |
 | <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    parent_stack_id = optional(string)<br/>    child_stack_id  = optional(string)<br/>    references = optional(map(object({<br/>      input_name     = string<br/>      output_name    = string<br/>      trigger_always = optional(bool)<br/>    })))<br/>  }))</pre> | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | REQUIRED A description to describe your Spacelift stack. | `string` | n/a | yes |
 | <a name="input_drift_detection"></a> [drift\_detection](#input\_drift\_detection) | Drift detection configuration for stack | <pre>object({<br/>    enabled      = bool<br/>    schedule     = optional(list(string))<br/>    ignore_state = optional(bool)<br/>    timezone     = optional(string)<br/>    reconcile    = optional(bool)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
@@ -151,7 +153,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
 | <a name="input_manage_state"></a> [manage\_state](#input\_manage\_state) | Should spacelift manage state files | `bool` | `true` | no |
 | <a name="input_name"></a> [name](#input\_name) | REQUIRED The name of the Spacelift stack to create. | `string` | n/a | yes |
-| <a name="input_policies"></a> [policies](#input\_policies) | Policies to add to the stack. | <pre>map(object({<br/>    file_path = string<br/>    type      = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_policies"></a> [policies](#input\_policies) | Policies to add to the stack. | `map(string)` | `{}` | no |
 | <a name="input_project_root"></a> [project\_root](#input\_project\_root) | The path to your project root in your repository to use as the root of the stack. Defaults to root of the repository. | `string` | `null` | no |
 | <a name="input_protect_from_deletion"></a> [protect\_from\_deletion](#input\_protect\_from\_deletion) | Whether to protect the stack from deletion. | `bool` | `false` | no |
 | <a name="input_pulumi"></a> [pulumi](#input\_pulumi) | config for pulumi in spacelift | <pre>object({<br/>    login_url  = string<br/>    stack_name = string<br/>  })</pre> | <pre>{<br/>  "login_url": null,<br/>  "stack_name": null<br/>}</pre> | no |
