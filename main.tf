@@ -192,21 +192,18 @@ resource "spacelift_environment_variable" "this" {
   write_only = each.value.sensitive
 }
 
-resource "spacelift_policy" "this" {
-  for_each = var.policies
-
-  name = each.key
-  body = file(each.value.file_path)
-  type = each.value.type
-
-  space_id = var.space_id
-}
-
 resource "spacelift_policy_attachment" "this" {
   for_each = var.policies
 
-  policy_id = spacelift_policy.this[each.key].id
+  policy_id = each.value
   stack_id  = spacelift_stack.this.id
+}
+
+resource "spacelift_context_attachment" "this" {
+  for_each = var.contexts
+
+  context_id = each.value
+  stack_id   = spacelift_stack.this.id
 }
 
 locals {

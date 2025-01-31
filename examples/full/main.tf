@@ -63,10 +63,11 @@ module "ec2_worker_pool_stack" {
   }
 
   policies = {
-    MY_AWESOME_PUSH_POLICY = {
-      file_path = "./policies/push/awesome.rego"
-      type      = "GIT_PUSH"
-    }
+    MY_AWESOME_PUSH_POLICY = spacelift_policy.this.id
+  }
+
+  contexts = {
+    MY_AWESOME_CONTEXT = spacelift.context.id
   }
 
   dependencies = {
