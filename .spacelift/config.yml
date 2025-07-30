@@ -1,0 +1,5 @@
+version: 1
+
+tests:
+ - name: Terraform/OpenTofu stack
+   project_root: examples/opentofu
