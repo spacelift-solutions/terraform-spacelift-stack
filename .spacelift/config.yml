@@ -3,3 +3,6 @@ version: 1
 tests:
  - name: Terraform/OpenTofu stack
    project_root: examples/opentofu
+
+ - name: Kubernetes stack
+   project_root: examples/kubernetes
