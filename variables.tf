@@ -45,6 +45,24 @@ variable "aws_integration" {
   }
 }
 
+variable "azure_integration" {
+  type = object({
+    enabled         = bool
+    id              = optional(string)
+    subscription_id = optional(string)
+  })
+  description = "Spacelift Azure integration configuration"
+
+  default = {
+    enabled = false
+  }
+
+  validation {
+    condition     = var.azure_integration.enabled == false || (var.azure_integration.enabled && var.azure_integration.id != null)
+    error_message = "The integration id must be included if azure_integration is enabled."
+  }
+}
+
 variable "cloudformation" {
   type = object({
     stack_name          = string
