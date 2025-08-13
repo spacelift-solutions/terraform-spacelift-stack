@@ -185,10 +185,11 @@ resource "spacelift_aws_integration_attachment" "this" {
 resource "spacelift_azure_integration_attachment" "this" {
   count = var.azure_integration.enabled ? 1 : 0
 
-  integration_id = var.azure_integration.id
-  stack_id       = spacelift_stack.this.id
-  read           = true
-  write          = true
+  integration_id  = var.azure_integration.id
+  subscription_id = var.azure_integration.subscription_id
+  stack_id        = spacelift_stack.this.id
+  read            = true
+  write           = true
 }
 
 resource "spacelift_environment_variable" "this" {
