@@ -11,7 +11,6 @@ module "ec2_worker_pool_stack" {
   protect_from_deletion = true
 
   auto_deploy     = true
-  administrative  = true
   allow_promotion = true
   tf_version      = "1.7.1"
   tf_workspace    = "worker-pool"
@@ -68,6 +67,13 @@ module "ec2_worker_pool_stack" {
 
   contexts = {
     MY_AWESOME_CONTEXT = spacelift.context.id
+  }
+
+  roles = {
+    ADMIN_ROLE = {
+      role_id  = spacelift_role.admin.id
+      space_id = spacelift_space.target.id
+    }
   }
 
   dependencies = {

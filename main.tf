@@ -63,8 +63,6 @@ resource "spacelift_stack" "this" {
   additional_project_globs = var.additional_project_globs
   protect_from_deletion    = var.protect_from_deletion
 
-  administrative = var.administrative
-
   terraform_smart_sanitization = true
 
   before_init    = local.hooks.before.init
@@ -213,6 +211,14 @@ resource "spacelift_context_attachment" "this" {
 
   context_id = each.value
   stack_id   = spacelift_stack.this.id
+}
+
+resource "spacelift_role_attachment" "this" {
+  for_each = var.roles
+
+  stack_id = spacelift_stack.this.id
+  role_id  = each.value.role_id
+  space_id = each.value.space_id
 }
 
 locals {

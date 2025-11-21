@@ -6,3 +6,6 @@ tests:
 
  - name: Kubernetes stack
    project_root: examples/kubernetes
+
+ - name: Roles
+   project_root: examples/roles
