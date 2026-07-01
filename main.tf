@@ -1,3 +1,4 @@
+# Test change to exercise the Module Test Coverage plugin.
 locals {
   is_tf_tool        = var.workflow_tool == "OPEN_TOFU" || var.workflow_tool == "TERRAFORM_FOSS"
   is_terragrunt     = var.workflow_tool == "TERRAGRUNT"
