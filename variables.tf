@@ -259,9 +259,9 @@ variable "terragrunt_config" {
 }
 
 variable "tf_vars" {
-  type        = string
-  description = "Path to a variable file to use for the stack. Sets the TF_CLI_ARGS_plan environment variable to pass the var-file to OpenTofu/Terraform during plan. Not needed for apply since Spacelift applies the generated plan file."
-  default     = null
+  type        = list(string)
+  description = "Paths to variable files to use for the stack. Sets the TF_CLI_ARGS_plan environment variable to pass the var-files to OpenTofu/Terraform during plan. Not needed for apply since Spacelift applies the generated plan file."
+  default     = []
 }
 
 variable "tf_version" {

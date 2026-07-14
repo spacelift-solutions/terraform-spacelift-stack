@@ -200,11 +200,11 @@ resource "spacelift_environment_variable" "this" {
 }
 
 resource "spacelift_environment_variable" "tf_vars" {
-  count = var.tf_vars != null ? 1 : 0
+  count = length(var.tf_vars) > 0 ? 1 : 0
 
   stack_id   = spacelift_stack.this.id
   name       = "TF_CLI_ARGS_plan"
-  value      = "-var-file=\"${var.tf_vars}\""
+  value      = join(" ", [for var_file in var.tf_vars : "-var-file=\"${var_file}\""])
   write_only = false
 }
 
