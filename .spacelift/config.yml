@@ -6,3 +6,6 @@ tests:
 
  - name: Kubernetes stack
    project_root: examples/kubernetes
+
+ - name: Stack with tfvars
+   project_root: examples/tfvars
