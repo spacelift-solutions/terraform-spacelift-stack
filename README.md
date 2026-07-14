@@ -9,7 +9,7 @@ Please open a PR or an issue if you see missing functionality.
 
 ```hcl
 module "ec2_worker_pool_stack" {
-  source = "spacelift-solutions/stack/spacelift"
+  source = "spacelift.io/spacelift-solutions/stacks-module/spacelift"
 
   name                  = "worker-pool-stack"
   description           = "Stack to create a worker pool"
@@ -23,7 +23,6 @@ module "ec2_worker_pool_stack" {
   auto_deploy     = true
   administrative  = true
   allow_promotion = true
-  tf_vars         = "environments/production.tfvars"
   tf_version      = "1.7.1"
   tf_workspace    = "worker-pool"
   workflow_tool   = "OPEN_TOFU"
