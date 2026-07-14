@@ -199,6 +199,15 @@ resource "spacelift_environment_variable" "this" {
   write_only = each.value.sensitive
 }
 
+resource "spacelift_environment_variable" "tf_vars" {
+  count = length(var.tf_vars) > 0 ? 1 : 0
+
+  stack_id   = spacelift_stack.this.id
+  name       = "TF_CLI_ARGS_plan"
+  value      = join(" ", [for var_file in var.tf_vars : "-var-file=\"${var_file}\""])
+  write_only = false
+}
+
 resource "spacelift_policy_attachment" "this" {
   for_each = var.policies
 

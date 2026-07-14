@@ -12,6 +12,7 @@ module "ec2_worker_pool_stack" {
 
   auto_deploy     = true
   allow_promotion = true
+  tf_vars         = ["environments/production.tfvars"]
   tf_version      = "1.7.1"
   tf_workspace    = "worker-pool"
   workflow_tool   = "OPEN_TOFU"

@@ -22,6 +22,7 @@ module "ec2_worker_pool_stack" {
 
   auto_deploy     = true
   allow_promotion = true
+  tf_vars         = ["environments/production.tfvars"]
   tf_version      = "1.7.1"
   tf_workspace    = "worker-pool"
   workflow_tool   = "OPEN_TOFU"
@@ -169,6 +170,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_runner_image"></a> [runner\_image](#input\_runner\_image) | The runner image to use for the stack. Defaults to the latest version. | `string` | `null` | no |
 | <a name="input_space_id"></a> [space\_id](#input\_space\_id) | REQUIRED The ID of the space this stack will be in. | `string` | n/a | yes |
 | <a name="input_terragrunt_config"></a> [terragrunt\_config](#input\_terragrunt\_config) | config for terragrunt in spacelift | <pre>object({<br/>    terraform_version    = string<br/>    terragrunt_version   = string<br/>    use_run_all          = optional(bool)<br/>    use_smart_sanitation = optional(bool)<br/>    tool                 = string<br/>  })</pre> | <pre>{<br/>  "terraform_version": null,<br/>  "terragrunt_version": null,<br/>  "tool": null<br/>}</pre> | no |
+| <a name="input_tf_vars"></a> [tf\_vars](#input\_tf\_vars) | Paths to variable files to use for the stack. Sets the TF\_CLI\_ARGS\_plan environment variable to pass the var-files to OpenTofu/Terraform during plan. Not needed for apply since Spacelift applies the generated plan file. | `list(string)` | `[]` | no |
 | <a name="input_tf_version"></a> [tf\_version](#input\_tf\_version) | The version of OpenTofu/Terraform for your stack to use. Defaults to latest. | `string` | `"latest"` | no |
 | <a name="input_tf_workspace"></a> [tf\_workspace](#input\_tf\_workspace) | The workspace to use for the stack. | `string` | `null` | no |
 | <a name="input_vcs"></a> [vcs](#input\_vcs) | VCS integration configuration | <pre>object({<br/>    type       = string<br/>    enterprise = optional(bool, false)<br/>    namespace  = optional(string)<br/>    id         = optional(string)<br/>    url        = optional(string)<br/>  })</pre> | <pre>{<br/>  "type": "GITHUB"<br/>}</pre> | no |
