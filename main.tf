@@ -58,12 +58,10 @@ resource "spacelift_stack" "this" {
   terraform_workflow_tool  = local.is_tf_tool ? var.workflow_tool : null
   space_id                 = var.space_id
   runner_image             = var.runner_image
-  github_action_deploy     = var.allow_promotion
+  allow_run_promotion      = var.allow_promotion
   terraform_workspace      = var.tf_workspace
   additional_project_globs = var.additional_project_globs
   protect_from_deletion    = var.protect_from_deletion
-
-  administrative = var.administrative
 
   terraform_smart_sanitization = true
 
@@ -182,6 +180,15 @@ resource "spacelift_aws_integration_attachment" "this" {
   read           = true
   write          = true
 }
+resource "spacelift_azure_integration_attachment" "this" {
+  count = var.azure_integration.enabled ? 1 : 0
+
+  integration_id  = var.azure_integration.id
+  subscription_id = var.azure_integration.subscription_id
+  stack_id        = spacelift_stack.this.id
+  read            = true
+  write           = true
+}
 
 resource "spacelift_environment_variable" "this" {
   for_each = var.environment_variables
@@ -213,6 +220,14 @@ resource "spacelift_context_attachment" "this" {
 
   context_id = each.value
   stack_id   = spacelift_stack.this.id
+}
+
+resource "spacelift_role_attachment" "this" {
+  for_each = var.roles
+
+  stack_id = spacelift_stack.this.id
+  role_id  = each.value.role_id
+  space_id = each.value.space_id
 }
 
 locals {

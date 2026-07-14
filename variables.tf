@@ -4,12 +4,6 @@ variable "additional_project_globs" {
   default     = []
 }
 
-variable "administrative" {
-  type        = bool
-  description = "Whether the stack is administrative or not."
-  default     = false
-}
-
 variable "allow_promotion" {
   type        = bool
   description = "Whether to allow promotion of the stack to the next environment."
@@ -42,6 +36,24 @@ variable "aws_integration" {
   validation {
     condition     = var.aws_integration.enabled == false || (var.aws_integration.enabled && var.aws_integration.id != null)
     error_message = "The integration id must be included if aws_entegration is enabled."
+  }
+}
+
+variable "azure_integration" {
+  type = object({
+    enabled         = bool
+    id              = optional(string)
+    subscription_id = optional(string)
+  })
+  description = "Spacelift Azure integration configuration"
+
+  default = {
+    enabled = false
+  }
+
+  validation {
+    condition     = var.azure_integration.enabled == false || (var.azure_integration.enabled && var.azure_integration.id != null)
+    error_message = "The integration id must be included if azure_integration is enabled."
   }
 }
 
@@ -208,6 +220,15 @@ variable "repository_branch" {
 variable "repository_name" {
   type        = string
   description = "REQUIRED The name of the Git repository for the stack to use."
+}
+
+variable "roles" {
+  type = map(object({
+    role_id  = string
+    space_id = string
+  }))
+  description = "Roles to attach to the stack. Replaces the deprecated administrative flag. See https://docs.spacelift.io/concepts/authorization/assigning-roles-stacks"
+  default     = {}
 }
 
 variable "runner_image" {

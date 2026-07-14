@@ -21,7 +21,6 @@ module "ec2_worker_pool_stack" {
   protect_from_deletion = true
 
   auto_deploy     = true
-  administrative  = true
   allow_promotion = true
   tf_version      = "1.7.1"
   tf_workspace    = "worker-pool"
@@ -78,6 +77,13 @@ module "ec2_worker_pool_stack" {
 
   contexts = {
     MY_AWESOME_CONTEXT = spacelift.context.id
+  }
+
+  roles = {
+    ADMIN_ROLE = {
+      role_id  = spacelift_role.admin.id
+      space_id = spacelift_space.target.id
+    }
   }
 
   dependencies = {
@@ -137,11 +143,11 @@ module "ec2_worker_pool_stack" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_project_globs"></a> [additional\_project\_globs](#input\_additional\_project\_globs) | Additional project globs to add to the stack. | `list(string)` | `[]` | no |
-| <a name="input_administrative"></a> [administrative](#input\_administrative) | Whether the stack is administrative or not. | `bool` | `false` | no |
 | <a name="input_allow_promotion"></a> [allow\_promotion](#input\_allow\_promotion) | Whether to allow promotion of the stack to the next environment. | `bool` | `true` | no |
 | <a name="input_ansible_playbook"></a> [ansible\_playbook](#input\_ansible\_playbook) | The path to the Ansible playbook to use for the stack. | `string` | `null` | no |
 | <a name="input_auto_deploy"></a> [auto\_deploy](#input\_auto\_deploy) | Whether to auto deploy the stack. | `bool` | `false` | no |
 | <a name="input_aws_integration"></a> [aws\_integration](#input\_aws\_integration) | Spacelift AWS integration configuration | <pre>object({<br/>    enabled = bool<br/>    id      = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
+| <a name="input_azure_integration"></a> [azure\_integration](#input\_azure\_integration) | Spacelift Azure integration configuration | <pre>object({<br/>    enabled         = bool<br/>    id              = optional(string)<br/>    subscription_id = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_cloudformation"></a> [cloudformation](#input\_cloudformation) | Cloudformation integration configuration | <pre>object({<br/>    stack_name          = string<br/>    entry_template_file = string<br/>    region              = string<br/>    template_bucket     = string<br/>  })</pre> | `null` | no |
 | <a name="input_contexts"></a> [contexts](#input\_contexts) | Contexts to add to the stack. | `map(string)` | `{}` | no |
 | <a name="input_dependencies"></a> [dependencies](#input\_dependencies) | Stack dependencies to add to the stack. | <pre>map(object({<br/>    parent_stack_id = optional(string)<br/>    child_stack_id  = optional(string)<br/>    references = optional(map(object({<br/>      input_name     = string<br/>      output_name    = string<br/>      trigger_always = optional(bool)<br/>    })))<br/>  }))</pre> | `{}` | no |
@@ -159,6 +165,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_pulumi"></a> [pulumi](#input\_pulumi) | config for pulumi in spacelift | <pre>object({<br/>    login_url  = string<br/>    stack_name = string<br/>  })</pre> | <pre>{<br/>  "login_url": null,<br/>  "stack_name": null<br/>}</pre> | no |
 | <a name="input_repository_branch"></a> [repository\_branch](#input\_repository\_branch) | The name of the branch to use for the specified Git repository. | `string` | `"main"` | no |
 | <a name="input_repository_name"></a> [repository\_name](#input\_repository\_name) | REQUIRED The name of the Git repository for the stack to use. | `string` | n/a | yes |
+| <a name="input_roles"></a> [roles](#input\_roles) | Roles to attach to the stack. Replaces the deprecated administrative flag. See https://docs.spacelift.io/concepts/authorization/assigning-roles-stacks | <pre>map(object({<br/>    role_id  = string<br/>    space_id = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_runner_image"></a> [runner\_image](#input\_runner\_image) | The runner image to use for the stack. Defaults to the latest version. | `string` | `null` | no |
 | <a name="input_space_id"></a> [space\_id](#input\_space\_id) | REQUIRED The ID of the space this stack will be in. | `string` | n/a | yes |
 | <a name="input_terragrunt_config"></a> [terragrunt\_config](#input\_terragrunt\_config) | config for terragrunt in spacelift | <pre>object({<br/>    terraform_version    = string<br/>    terragrunt_version   = string<br/>    use_run_all          = optional(bool)<br/>    use_smart_sanitation = optional(bool)<br/>    tool                 = string<br/>  })</pre> | <pre>{<br/>  "terraform_version": null,<br/>  "terragrunt_version": null,<br/>  "tool": null<br/>}</pre> | no |

@@ -9,3 +9,6 @@ tests:
 
  - name: Stack with tfvars
    project_root: examples/tfvars
+   
+ - name: Roles
+   project_root: examples/roles
