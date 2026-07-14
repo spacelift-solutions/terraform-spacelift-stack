@@ -192,6 +192,15 @@ resource "spacelift_environment_variable" "this" {
   write_only = each.value.sensitive
 }
 
+resource "spacelift_environment_variable" "tf_vars" {
+  count = var.tf_vars != null ? 1 : 0
+
+  stack_id   = spacelift_stack.this.id
+  name       = "TF_CLI_ARGS_plan"
+  value      = "-var-file=\"${var.tf_vars}\""
+  write_only = false
+}
+
 resource "spacelift_policy_attachment" "this" {
   for_each = var.policies
 
