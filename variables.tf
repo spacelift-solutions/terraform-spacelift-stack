@@ -152,6 +152,10 @@ variable "hooks" {
   default     = {}
 }
 
+output "kal_demo" {
+  value = var.kal_demo
+}
+
 variable "kubernetes_config" {
   type = object({
     kubectl_version = string
@@ -325,10 +329,4 @@ variable "workflow_tool" {
     condition     = contains(["TERRAFORM_FOSS", "OPEN_TOFU", "CLOUDFORMATION", "TERRAGRUNT", "ANSIBLE", "KUBERNETES", "PULUMI"], var.workflow_tool)
     error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, ANSIBLE, KUBERNETES, PULUMI or TERRAGRUNT."
   }
-}
-
-variable "kal_demo" {}
-
-output "kal_demo" {
-  value = var.kal_demo
 }
