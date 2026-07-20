@@ -326,3 +326,9 @@ variable "workflow_tool" {
     error_message = "The workflow tool must be TERRAFORM_FOSS, OPEN_TOFU, CLOUDFORMATION, ANSIBLE, KUBERNETES, PULUMI or TERRAGRUNT."
   }
 }
+
+variable "kal_demo" {}
+
+output "kal_demo" {
+  value = var.kal_demo
+}
