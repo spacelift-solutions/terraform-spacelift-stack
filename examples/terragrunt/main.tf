@@ -12,7 +12,7 @@ module "this" {
     terragrunt_version                     = "0.66.3"
     tool                                   = "OPEN_TOFU"
     use_run_all                            = true
-    use_smart_sanitation                   = true
+    use_smart_sanitization                 = true
     prefix_resource_names_with_module_name = true
     skip_replan                            = false
   }

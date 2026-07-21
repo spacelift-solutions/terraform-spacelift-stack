@@ -247,7 +247,7 @@ variable "terragrunt_config" {
     terraform_version                      = string
     terragrunt_version                     = string
     use_run_all                            = optional(bool)
-    use_smart_sanitation                   = optional(bool)
+    use_smart_sanitization                 = optional(bool)
     use_state_management                   = optional(bool)
     prefix_resource_names_with_module_name = optional(bool)
     skip_replan                            = optional(bool)
