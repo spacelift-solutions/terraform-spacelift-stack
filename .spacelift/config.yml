@@ -12,3 +12,6 @@ tests:
    
  - name: Roles
    project_root: examples/roles
+
+ - name: Terragrunt stack
+   project_root: examples/terragrunt
