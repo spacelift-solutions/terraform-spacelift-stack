@@ -63,8 +63,6 @@ resource "spacelift_stack" "this" {
   additional_project_globs = var.additional_project_globs
   protect_from_deletion    = var.protect_from_deletion
 
-  terraform_smart_sanitization = true
-
   before_init    = local.hooks.before.init
   before_plan    = local.hooks.before.plan
   before_apply   = local.hooks.before.apply
