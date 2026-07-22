@@ -51,11 +51,11 @@ module "ec2_worker_pool_stack" {
   }
 
   terragrunt_config = {
-    terragrunt_version   = "0.66.3"
-    terraform_version    = "1.8.1"
-    use_run_all          = true
-    use_smart_sanitation = true
-    tool                 = "OPEN_TOFU"
+    terragrunt_version     = "0.66.3"
+    terraform_version      = "1.8.1"
+    use_run_all            = true
+    use_smart_sanitization = true
+    tool                   = "OPEN_TOFU"
   }
 
   additional_project_globs = [
@@ -169,7 +169,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_roles"></a> [roles](#input\_roles) | Roles to attach to the stack. Replaces the deprecated administrative flag. See https://docs.spacelift.io/concepts/authorization/assigning-roles-stacks | <pre>map(object({<br/>    role_id  = string<br/>    space_id = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_runner_image"></a> [runner\_image](#input\_runner\_image) | The runner image to use for the stack. Defaults to the latest version. | `string` | `null` | no |
 | <a name="input_space_id"></a> [space\_id](#input\_space\_id) | REQUIRED The ID of the space this stack will be in. | `string` | n/a | yes |
-| <a name="input_terragrunt_config"></a> [terragrunt\_config](#input\_terragrunt\_config) | config for terragrunt in spacelift | <pre>object({<br/>    terraform_version    = string<br/>    terragrunt_version   = string<br/>    use_run_all          = optional(bool)<br/>    use_smart_sanitation = optional(bool)<br/>    tool                 = string<br/>  })</pre> | <pre>{<br/>  "terraform_version": null,<br/>  "terragrunt_version": null,<br/>  "tool": null<br/>}</pre> | no |
+| <a name="input_terragrunt_config"></a> [terragrunt\_config](#input\_terragrunt\_config) | config for terragrunt in spacelift | <pre>object({<br/>    terraform_version                      = string<br/>    terragrunt_version                     = string<br/>    use_run_all                            = optional(bool)<br/>    use_smart_sanitization                 = optional(bool)<br/>    use_state_management                   = optional(bool)<br/>    prefix_resource_names_with_module_name = optional(bool)<br/>    skip_replan                            = optional(bool)<br/>    tool                                   = string<br/>  })</pre> | <pre>{<br/>  "terraform_version": null,<br/>  "terragrunt_version": null,<br/>  "tool": null<br/>}</pre> | no |
 | <a name="input_tf_vars"></a> [tf\_vars](#input\_tf\_vars) | Paths to variable files to use for the stack. Sets the TF\_CLI\_ARGS\_plan environment variable to pass the var-files to OpenTofu/Terraform during plan. Not needed for apply since Spacelift applies the generated plan file. | `list(string)` | `[]` | no |
 | <a name="input_tf_version"></a> [tf\_version](#input\_tf\_version) | The version of OpenTofu/Terraform for your stack to use. Defaults to latest. | `string` | `"latest"` | no |
 | <a name="input_tf_workspace"></a> [tf\_workspace](#input\_tf\_workspace) | The workspace to use for the stack. | `string` | `null` | no |

@@ -41,11 +41,11 @@ module "ec2_worker_pool_stack" {
   }
 
   terragrunt_config = {
-    terragrunt_version   = "0.66.3"
-    terraform_version    = "1.8.1"
-    use_run_all          = true
-    use_smart_sanitation = true
-    tool                 = "OPEN_TOFU"
+    terragrunt_version     = "0.66.3"
+    terraform_version      = "1.8.1"
+    use_run_all            = true
+    use_smart_sanitization = true
+    tool                   = "OPEN_TOFU"
   }
 
   additional_project_globs = [

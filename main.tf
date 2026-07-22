@@ -63,8 +63,6 @@ resource "spacelift_stack" "this" {
   additional_project_globs = var.additional_project_globs
   protect_from_deletion    = var.protect_from_deletion
 
-  terraform_smart_sanitization = true
-
   before_init    = local.hooks.before.init
   before_plan    = local.hooks.before.plan
   before_apply   = local.hooks.before.apply
@@ -89,11 +87,14 @@ resource "spacelift_stack" "this" {
     for_each = local.is_terragrunt ? ["TERRAGRUNT"] : []
 
     content {
-      terragrunt_version     = var.terragrunt_config.terragrunt_version
-      terraform_version      = var.terragrunt_config.terraform_version
-      use_run_all            = var.terragrunt_config.use_run_all
-      use_smart_sanitization = var.terragrunt_config.use_smart_sanitation
-      tool                   = var.terragrunt_config.tool
+      terragrunt_version                     = var.terragrunt_config.terragrunt_version
+      terraform_version                      = var.terragrunt_config.terraform_version
+      use_run_all                            = var.terragrunt_config.use_run_all
+      use_smart_sanitization                 = var.terragrunt_config.use_smart_sanitization
+      use_state_management                   = coalesce(var.terragrunt_config.use_state_management, var.manage_state)
+      prefix_resource_names_with_module_name = var.terragrunt_config.prefix_resource_names_with_module_name
+      skip_replan                            = var.terragrunt_config.skip_replan
+      tool                                   = var.terragrunt_config.tool
     }
   }
 
