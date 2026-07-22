@@ -152,6 +152,10 @@ variable "hooks" {
   default     = {}
 }
 
+output "kal_demo" {
+  value = var.kal_demo
+}
+
 variable "kubernetes_config" {
   type = object({
     kubectl_version = string
