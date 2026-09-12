@@ -181,7 +181,8 @@ module "ec2_worker_pool_stack" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_id"></a> [id](#output\_id) | The ID of the stack |  
+| <a name="output_id"></a> [id](#output\_id) | The ID of the stack |
+| <a name="output_kal_demo"></a> [kal\_demo](#output\_kal\_demo) | n/a |  
 <!-- END_TF_DOCS -->
 
 ## Using Stack Dependencies
