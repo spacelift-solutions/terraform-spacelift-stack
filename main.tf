@@ -63,6 +63,9 @@ resource "spacelift_stack" "this" {
   additional_project_globs = var.additional_project_globs
   protect_from_deletion    = var.protect_from_deletion
 
+  enable_well_known_secret_masking = var.enable_well_known_secret_masking
+  terraform_smart_sanitization     = local.is_tf_tool ? var.terraform_smart_sanitization : null
+
   before_init    = local.hooks.before.init
   before_plan    = local.hooks.before.plan
   before_apply   = local.hooks.before.apply
