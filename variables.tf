@@ -122,6 +122,12 @@ variable "drift_detection" {
   }
 }
 
+variable "enable_well_known_secret_masking" {
+  type        = bool
+  description = "Whether to mask well-known secrets (API keys, tokens, etc.) in the stack's run logs."
+  default     = false
+}
+
 variable "environment_variables" {
   type = map(object({
     value     = string
@@ -240,6 +246,12 @@ variable "runner_image" {
 variable "space_id" {
   type        = string
   description = "REQUIRED The ID of the space this stack will be in."
+}
+
+variable "terraform_smart_sanitization" {
+  type        = bool
+  description = "Whether to use OpenTofu/Terraform's sensitive value system to sanitize state and plan outputs instead of sanitizing all fields. Only applies to OPEN_TOFU and TERRAFORM_FOSS stacks."
+  default     = false
 }
 
 variable "terragrunt_config" {
