@@ -7,9 +7,11 @@ jobs:
   fmt-and-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
+          persist-credentials: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
 
       - name: OpenTofu - Setup Tofu
         uses: opentofu/setup-opentofu@v1.0.4
@@ -21,11 +23,16 @@ jobs:
         run: |
           sorted_files=("variables.tf" "outputs.tf")
           for file in "${sorted_files[@]}"; do
-              ./.github/binaries/tfsort $file
+              ./.github/binaries/tfsort "$file"
           done
 
-      - name: Render terraform docs inside the README.md and push changes back to PR branch
+      - name: Render terraform docs inside the README.md
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           config-file: .terraform-docs.yml
-          git-push: true
+          git-push: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+          fail-on-diff: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+
+      - name: Ensure fork PR has no changes to push
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: git diff --exit-code
