@@ -6,6 +6,10 @@ locals {
   is_kubernetes     = var.workflow_tool == "KUBERNETES"
   is_pulumi         = var.workflow_tool == "PULUMI"
 
+  # The provider rejects the terraform_* fields alongside the opentofu block.
+  is_native_tofu = var.workflow_tool == "OPEN_TOFU" && var.opentofu_native
+  is_legacy_tf   = local.is_tf_tool && !local.is_native_tofu
+
   is_latest_tf_tool = local.is_tf_tool && var.tf_version == "latest"
   tf_version        = local.is_latest_tf_tool ? data.spacelift_tool_versions.latest["TERRAFORM"].versions[0] : (local.is_tf_tool ? var.tf_version : null)
 
@@ -48,23 +52,23 @@ resource "spacelift_stack" "this" {
   repository               = var.repository_name
   branch                   = var.repository_branch
   description              = var.description
-  terraform_version        = local.tf_version
+  terraform_version        = local.is_legacy_tf ? local.tf_version : null
   worker_pool_id           = var.worker_pool_id
   project_root             = var.project_root
   labels                   = var.labels
   enable_local_preview     = true
   autodeploy               = var.auto_deploy
   manage_state             = var.manage_state
-  terraform_workflow_tool  = local.is_tf_tool ? var.workflow_tool : null
+  terraform_workflow_tool  = local.is_legacy_tf ? var.workflow_tool : null
   space_id                 = var.space_id
   runner_image             = var.runner_image
   allow_run_promotion      = var.allow_promotion
-  terraform_workspace      = var.tf_workspace
+  terraform_workspace      = local.is_native_tofu ? null : var.tf_workspace
   additional_project_globs = var.additional_project_globs
   protect_from_deletion    = var.protect_from_deletion
 
   enable_well_known_secret_masking = var.enable_well_known_secret_masking
-  terraform_smart_sanitization     = local.is_tf_tool ? var.terraform_smart_sanitization : null
+  terraform_smart_sanitization     = local.is_legacy_tf ? var.terraform_smart_sanitization : null
 
   before_init    = local.hooks.before.init
   before_plan    = local.hooks.before.plan
@@ -83,6 +87,16 @@ resource "spacelift_stack" "this" {
     content {
       login_url  = var.pulumi.login_url
       stack_name = var.pulumi.stack_name
+    }
+  }
+
+  dynamic "opentofu" {
+    for_each = local.is_native_tofu ? ["OPENTOFU"] : []
+
+    content {
+      version                = local.tf_version
+      workspace              = var.tf_workspace
+      use_smart_sanitization = var.terraform_smart_sanitization
     }
   }
 

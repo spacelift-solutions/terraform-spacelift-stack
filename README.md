@@ -161,6 +161,7 @@ module "ec2_worker_pool_stack" {
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the stack being created. | `list(string)` | `[]` | no |
 | <a name="input_manage_state"></a> [manage\_state](#input\_manage\_state) | Should spacelift manage state files | `bool` | `true` | no |
 | <a name="input_name"></a> [name](#input\_name) | REQUIRED The name of the Spacelift stack to create. | `string` | n/a | yes |
+| <a name="input_opentofu_native"></a> [opentofu\_native](#input\_opentofu\_native) | Use the native OpenTofu vendor (`opentofu` block) instead of the Terraform vendor with `terraform_workflow_tool = "OPEN_TOFU"`. Only applies when `workflow_tool` is `OPEN_TOFU`. An existing stack must be migrated to the native OpenTofu vendor first (stack settings or the `openTofuMigrate` mutation), otherwise the apply fails: the vendor of an existing stack cannot be changed. | `bool` | `false` | no |
 | <a name="input_policies"></a> [policies](#input\_policies) | Policies to add to the stack. | `map(string)` | `{}` | no |
 | <a name="input_project_root"></a> [project\_root](#input\_project\_root) | The path to your project root in your repository to use as the root of the stack. Defaults to root of the repository. | `string` | `null` | no |
 | <a name="input_protect_from_deletion"></a> [protect\_from\_deletion](#input\_protect\_from\_deletion) | Whether to protect the stack from deletion. | `bool` | `false` | no |
