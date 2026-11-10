@@ -187,6 +187,12 @@ variable "name" {
   description = "REQUIRED The name of the Spacelift stack to create."
 }
 
+variable "opentofu_native" {
+  type        = bool
+  description = "Use the native OpenTofu vendor (`opentofu` block) instead of the Terraform vendor with `terraform_workflow_tool = \"OPEN_TOFU\"`. Only applies when `workflow_tool` is `OPEN_TOFU`. An existing stack must be migrated to the native OpenTofu vendor first (stack settings or the `openTofuMigrate` mutation), otherwise the apply fails: the vendor of an existing stack cannot be changed."
+  default     = false
+}
+
 variable "policies" {
   type        = map(string)
   description = "Policies to add to the stack."
